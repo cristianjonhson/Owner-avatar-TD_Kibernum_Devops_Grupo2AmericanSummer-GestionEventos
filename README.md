@@ -11,8 +11,8 @@ Este proyecto es una aplicación de gestión de eventos construida con Spring Bo
 
 ## Tecnologías Utilizadas
 
-- Java 11
-- Spring Boot 2.7.3
+- Java 17
+- Spring Boot 3.3.1
 - Spring MVC
 - Thymeleaf
 - Hibernate
