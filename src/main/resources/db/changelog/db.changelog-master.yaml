@@ -1,0 +1,170 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: your_name
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: SERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: email
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: password
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 2
+      author: your_name
+      changes:
+        - createTable:
+            tableName: calendar
+            columns:
+              - column:
+                  name: id
+                  type: SERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: year
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: month
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: day
+                  type: INT
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 3
+      author: your_name
+      changes:
+        - createTable:
+            tableName: event
+            columns:
+              - column:
+                  name: id
+                  type: SERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: TEXT
+              - column:
+                  name: date
+                  type: DATE
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 4
+      author: your_name
+      changes:
+        - createTable:
+            tableName: event_categories
+            columns:
+              - column:
+                  name: id
+                  type: SERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: TEXT
+
+  - changeSet:
+      id: 5
+      author: your_name
+      changes:
+        - addColumn:
+            tableName: event
+            columns:
+              - column:
+                  name: calendar_id
+                  type: INT
+
+  - changeSet:
+      id: 6
+      author: your_name
+      changes:
+        - createTable:
+            tableName: event_calendar
+            columns:
+              - column:
+                  name: event_id
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: calendar_id
+                  type: INT
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 7
+      author: your_name
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: event_calendar
+            baseColumnNames: event_id
+            referencedTableName: event
+            referencedColumnNames: id
+            constraintName: fk_event_calendar_event
+
+  - changeSet:
+      id: 8
+      author: your_name
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: event_calendar
+            baseColumnNames: calendar_id
+            referencedTableName: calendar
+            referencedColumnNames: id
+            constraintName: fk_event_calendar_calendar
+
+  - changeSet:
+      id: 9
+      author: your_name
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: event
+            baseColumnNames: calendar_id
+            referencedTableName: calendar
+            referencedColumnNames: id
+            constraintName: fk_event_calendar
