@@ -18,6 +18,8 @@ Este proyecto es una aplicación de gestión de eventos construida con Spring Bo
 - Hibernate
 - PostgreSQL
 - Maven
+- IDE Eclipse
+- Jira
 
 ## Requisitos Previos
 
