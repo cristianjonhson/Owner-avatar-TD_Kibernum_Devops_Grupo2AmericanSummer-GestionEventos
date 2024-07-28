@@ -4,8 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import cl.td.g2.eventos.dto.InscripcionDTO;
-
 import java.util.List;
 import java.util.Optional;
 
