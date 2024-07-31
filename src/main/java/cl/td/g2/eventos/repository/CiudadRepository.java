@@ -24,6 +24,9 @@ public interface CiudadRepository extends JpaRepository<Ciudad, Long> {
     // Eliminar por ID
     void deleteById(Long id);
     
-    // Encontrar por nombre
+    // Método para encontrar una ciudad por nombre
     Optional<Ciudad> findByNombre(String nombre);
+
+    // Método para verificar si una ciudad con el nombre especificado existe
+    boolean existsByNombre(String nombre);
 }
