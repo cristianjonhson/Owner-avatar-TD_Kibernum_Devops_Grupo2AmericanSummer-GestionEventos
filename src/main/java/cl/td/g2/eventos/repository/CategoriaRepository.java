@@ -24,6 +24,9 @@ public interface CategoriaRepository extends JpaRepository<Categoria, Long> {
     // Eliminar por ID
     void deleteById(Long id);
     
-    // Encontrar por nombre
+    // Método para encontrar una categoría por nombre
     Optional<Categoria> findByNombre(String nombre);
+
+    // Método para verificar si una categoría con el nombre especificado existe
+    boolean existsByNombre(String nombre);
 }
