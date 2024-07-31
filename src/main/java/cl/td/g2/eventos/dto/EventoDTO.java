@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 
 public class EventoDTO {
 
-    private Long id;
+	private Long id;
     private String titulo;
     private String descripcion;
     private LocalDateTime fechaInicio;
@@ -91,8 +91,4 @@ public class EventoDTO {
 	public void setFechaCreacion(LocalDateTime fechaCreacion) {
 		this.fechaCreacion = fechaCreacion;
 	}
-
-    // Getters and setters
-    
-    
 }
