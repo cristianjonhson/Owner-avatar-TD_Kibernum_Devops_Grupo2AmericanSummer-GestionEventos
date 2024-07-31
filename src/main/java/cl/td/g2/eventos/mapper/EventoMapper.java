@@ -10,7 +10,7 @@ import cl.td.g2.eventos.model.Evento;
 /**
  * Mapper para convertir entre entidades Evento y DTOs de Evento.
  */
-@Mapper
+@Mapper(componentModel = "spring", uses = {CategoriaMapper.class, CiudadMapper.class})
 public interface EventoMapper {
 
     EventoMapper INSTANCE = Mappers.getMapper(EventoMapper.class);
