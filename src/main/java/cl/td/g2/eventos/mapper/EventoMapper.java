@@ -1,5 +1,7 @@
 package cl.td.g2.eventos.mapper;
 
+import java.util.List;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -36,4 +38,6 @@ public interface EventoMapper {
     @Mapping(source = "categoriaId", target = "categoria.id")
     @Mapping(source = "ciudadId", target = "ciudad.id")
     Evento toEntity(EventoDTO eventoDTO);
+
+	List<EventoDTO> toDTO(List<Evento> eventos);
 }
