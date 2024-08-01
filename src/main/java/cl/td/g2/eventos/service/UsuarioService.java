@@ -1,73 +1,50 @@
 package cl.td.g2.eventos.service;
 
+import cl.td.g2.eventos.dto.UsuarioDTO;
+import cl.td.g2.eventos.mapper.UsuarioMapper;
+import cl.td.g2.eventos.model.Usuario;
+import cl.td.g2.eventos.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-@Transactional
 public class UsuarioService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    @Autowired
+    private UsuarioMapper usuarioMapper;
+
     public List<UsuarioDTO> getAllUsuarios() {
-        return usuarioRepository.findAll().stream()
-                .map(this::convertToDTO)
-                .toList();
+        List<Usuario> usuarios = usuarioRepository.findAll();
+        return usuarioMapper.toDTO(usuarios);
     }
 
-    public UsuarioDTO getUsuarioById(Long id) {
-        Usuario usuario = usuarioRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-        return convertToDTO(usuario);
+    public Optional<UsuarioDTO> getUsuarioById(Long id) {
+        return usuarioRepository.findById(id).map(usuarioMapper::toDTO);
     }
 
     public UsuarioDTO createUsuario(UsuarioDTO usuarioDTO) {
-        Usuario usuario = convertToEntity(usuarioDTO);
+        Usuario usuario = usuarioMapper.toEntity(usuarioDTO);
         Usuario savedUsuario = usuarioRepository.save(usuario);
-        return convertToDTO(savedUsuario);
+        return usuarioMapper.toDTO(savedUsuario);
     }
 
     public UsuarioDTO updateUsuario(Long id, UsuarioDTO usuarioDTO) {
-        Usuario usuario = usuarioRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-        usuario.setNombre(usuarioDTO.getNombre());
-        usuario.setApellido(usuarioDTO.getApellido());
-        usuario.setEmail(usuarioDTO.getEmail());
-        usuario.setContrasena(usuarioDTO.getContrasena());
-        usuario.setRol(usuarioDTO.getRol());
-        Usuario updatedUsuario = usuarioRepository.save(usuario);
-        return convertToDTO(updatedUsuario);
+        if (usuarioRepository.existsById(id)) {
+            Usuario usuario = usuarioMapper.toEntity(usuarioDTO);
+            usuario.setId(id);
+            Usuario updatedUsuario = usuarioRepository.save(usuario);
+            return usuarioMapper.toDTO(updatedUsuario);
+        }
+        return null;
     }
 
     public void deleteUsuario(Long id) {
-        Usuario usuario = usuarioRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-        usuarioRepository.delete(usuario);
-    }
-
-    private UsuarioDTO convertToDTO(Usuario usuario) {
-        UsuarioDTO dto = new UsuarioDTO();
-        dto.setId(usuario.getId());
-        dto.setNombre(usuario.getNombre());
-        dto.setApellido(usuario.getApellido());
-        dto.setEmail(usuario.getEmail());
-        dto.setContrasena(usuario.getContrasena());
-        dto.setRol(usuario.getRol());
-        return dto;
-    }
-
-    private Usuario convertToEntity(UsuarioDTO dto) {
-        Usuario usuario = new Usuario();
-        usuario.setNombre(dto.getNombre());
-        usuario.setApellido(dto.getApellido());
-        usuario.setEmail(dto.getEmail());
-        usuario.setContrasena(dto.getContrasena());
-        usuario.setRol(dto.getRol());
-        return usuario;
+        usuarioRepository.deleteById(id);
     }
 }
