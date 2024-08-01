@@ -1,79 +1,50 @@
 package cl.td.g2.eventos.service;
 
+import cl.td.g2.eventos.dto.EventoDTO;
+import cl.td.g2.eventos.mapper.EventoMapper;
+import cl.td.g2.eventos.model.Evento;
+import cl.td.g2.eventos.repository.EventoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-@Transactional
 public class EventoService {
 
     @Autowired
     private EventoRepository eventoRepository;
 
+    @Autowired
+    private EventoMapper eventoMapper;
+
     public List<EventoDTO> getAllEventos() {
-        return eventoRepository.findAll().stream()
-                .map(this::convertToDTO)
-                .toList();
+        List<Evento> eventos = eventoRepository.findAll();
+        return eventoMapper.toDTO(eventos);
     }
 
-    public EventoDTO getEventoById(Long id) {
-        Evento evento = eventoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Evento no encontrado"));
-        return convertToDTO(evento);
+    public Optional<EventoDTO> getEventoById(Long id) {
+        return eventoRepository.findById(id).map(eventoMapper::toDTO);
     }
 
     public EventoDTO createEvento(EventoDTO eventoDTO) {
-        Evento evento = convertToEntity(eventoDTO);
+        Evento evento = eventoMapper.toEntity(eventoDTO);
         Evento savedEvento = eventoRepository.save(evento);
-        return convertToDTO(savedEvento);
+        return eventoMapper.toDTO(savedEvento);
     }
 
     public EventoDTO updateEvento(Long id, EventoDTO eventoDTO) {
-        Evento evento = eventoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Evento no encontrado"));
-        evento.setTitulo(eventoDTO.getTitulo());
-        evento.setDescripcion(eventoDTO.getDescripcion());
-        evento.setFechaInicio(eventoDTO.getFechaInicio());
-        evento.setFechaFin(eventoDTO.getFechaFin());
-        evento.setUbicacion(eventoDTO.getUbicacion());
-        evento.setValor(eventoDTO.getValor());
-        evento.setImagenHtml(eventoDTO.getImagenHtml());
-        Evento updatedEvento = eventoRepository.save(evento);
-        return convertToDTO(updatedEvento);
+        if (eventoRepository.existsById(id)) {
+            Evento evento = eventoMapper.toEntity(eventoDTO);
+            evento.setId(id);
+            Evento updatedEvento = eventoRepository.save(evento);
+            return eventoMapper.toDTO(updatedEvento);
+        }
+        return null;
     }
 
     public void deleteEvento(Long id) {
-        Evento evento = eventoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Evento no encontrado"));
-        eventoRepository.delete(evento);
-    }
-
-    private EventoDTO convertToDTO(Evento evento) {
-        EventoDTO dto = new EventoDTO();
-        dto.setId(evento.getId());
-        dto.setTitulo(evento.getTitulo());
-        dto.setDescripcion(evento.getDescripcion());
-        dto.setFechaInicio(evento.getFechaInicio());
-        dto.setFechaFin(evento.getFechaFin());
-        dto.setUbicacion(evento.getUbicacion());
-        dto.setValor(evento.getValor());
-        dto.setImagenHtml(evento.getImagenHtml());
-        return dto;
-    }
-
-    private Evento convertToEntity(EventoDTO dto) {
-        Evento evento = new Evento();
-        evento.setTitulo(dto.getTitulo());
-        evento.setDescripcion(dto.getDescripcion());
-        evento.setFechaInicio(dto.getFechaInicio());
-        evento.setFechaFin(dto.getFechaFin());
-        evento.setUbicacion(dto.getUbicacion());
-        evento.setValor(dto.getValor());
-        evento.setImagenHtml(dto.getImagenHtml());
-        return evento;
+        eventoRepository.deleteById(id);
     }
 }
