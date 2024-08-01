@@ -1,64 +1,50 @@
 package cl.td.g2.eventos.service;
 
+import cl.td.g2.eventos.dto.InscripcionDTO;
+import cl.td.g2.eventos.mapper.InscripcionMapper;
+import cl.td.g2.eventos.model.Inscripcion;
+import cl.td.g2.eventos.repository.InscripcionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-@Transactional
 public class InscripcionService {
 
     @Autowired
     private InscripcionRepository inscripcionRepository;
 
+    @Autowired
+    private InscripcionMapper inscripcionMapper;
+
     public List<InscripcionDTO> getAllInscripciones() {
-        return inscripcionRepository.findAll().stream()
-                .map(this::convertToDTO)
-                .toList();
+        List<Inscripcion> inscripciones = inscripcionRepository.findAll();
+        return inscripcionMapper.toDTO(inscripciones);
     }
 
-    public InscripcionDTO getInscripcionById(Long id) {
-        Inscripcion inscripcion = inscripcionRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Inscripción no encontrada"));
-        return convertToDTO(inscripcion);
+    public Optional<InscripcionDTO> getInscripcionById(Long id) {
+        return inscripcionRepository.findById(id).map(inscripcionMapper::toDTO);
     }
 
     public InscripcionDTO createInscripcion(InscripcionDTO inscripcionDTO) {
-        Inscripcion inscripcion = convertToEntity(inscripcionDTO);
+        Inscripcion inscripcion = inscripcionMapper.toEntity(inscripcionDTO);
         Inscripcion savedInscripcion = inscripcionRepository.save(inscripcion);
-        return convertToDTO(savedInscripcion);
+        return inscripcionMapper.toDTO(savedInscripcion);
     }
 
     public InscripcionDTO updateInscripcion(Long id, InscripcionDTO inscripcionDTO) {
-        Inscripcion inscripcion = inscripcionRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Inscripción no encontrada"));
-        inscripcion.setUsuarioId(inscripcionDTO.getUsuarioId());
-        inscripcion.setEventoId(inscripcionDTO.getEventoId());
-        Inscripcion updatedInscripcion = inscripcionRepository.save(inscripcion);
-        return convertToDTO(updatedInscripcion);
+        if (inscripcionRepository.existsById(id)) {
+            Inscripcion inscripcion = inscripcionMapper.toEntity(inscripcionDTO);
+            inscripcion.setId(id);
+            Inscripcion updatedInscripcion = inscripcionRepository.save(inscripcion);
+            return inscripcionMapper.toDTO(updatedInscripcion);
+        }
+        return null;
     }
 
     public void deleteInscripcion(Long id) {
-        Inscripcion inscripcion = inscripcionRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Inscripción no encontrada"));
-        inscripcionRepository.delete(inscripcion);
-    }
-
-    private InscripcionDTO convertToDTO(Inscripcion inscripcion) {
-        InscripcionDTO dto = new InscripcionDTO();
-        dto.setId(inscripcion.getId());
-        dto.setUsuarioId(inscripcion.getUsuarioId());
-        dto.setEventoId(inscripcion.getEventoId());
-        return dto;
-    }
-
-    private Inscripcion convertToEntity(InscripcionDTO dto) {
-        Inscripcion inscripcion = new Inscripcion();
-        inscripcion.setUsuarioId(dto.getUsuarioId());
-        inscripcion.setEventoId(dto.getEventoId());
-        return inscripcion;
+        inscripcionRepository.deleteById(id);
     }
 }
