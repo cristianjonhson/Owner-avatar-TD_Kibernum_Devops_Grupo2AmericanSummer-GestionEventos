@@ -2,6 +2,8 @@ package cl.td.g2.eventos.controller;
 
 import cl.td.g2.eventos.dto.UsuarioDTO;
 import cl.td.g2.eventos.service.UsuarioService;
+import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,13 +32,13 @@ public class UsuarioController {
     }
 
     @PostMapping
-    public ResponseEntity<UsuarioDTO> createUsuario(@RequestBody UsuarioDTO usuarioDTO) {
+    public ResponseEntity<UsuarioDTO> createUsuario(@Valid @RequestBody UsuarioDTO usuarioDTO) {
         UsuarioDTO createdUsuario = usuarioService.createUsuario(usuarioDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUsuario);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UsuarioDTO> updateUsuario(@PathVariable Long id, @RequestBody UsuarioDTO usuarioDTO) {
+    public ResponseEntity<UsuarioDTO> updateUsuario(@PathVariable Long id, @Valid @RequestBody UsuarioDTO usuarioDTO) {
         UsuarioDTO updatedUsuario = usuarioService.updateUsuario(id, usuarioDTO);
         return updatedUsuario != null ? ResponseEntity.ok(updatedUsuario) : ResponseEntity.notFound().build();
     }

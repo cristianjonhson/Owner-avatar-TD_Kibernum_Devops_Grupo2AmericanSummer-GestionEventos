@@ -2,6 +2,8 @@ package cl.td.g2.eventos.controller;
 
 import cl.td.g2.eventos.dto.InscripcionDTO;
 import cl.td.g2.eventos.service.InscripcionService;
+import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,13 +32,13 @@ public class InscripcionController {
     }
 
     @PostMapping
-    public ResponseEntity<InscripcionDTO> createInscripcion(@RequestBody InscripcionDTO inscripcionDTO) {
+    public ResponseEntity<InscripcionDTO> createInscripcion(@Valid @RequestBody InscripcionDTO inscripcionDTO) {
         InscripcionDTO createdInscripcion = inscripcionService.createInscripcion(inscripcionDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdInscripcion);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<InscripcionDTO> updateInscripcion(@PathVariable Long id, @RequestBody InscripcionDTO inscripcionDTO) {
+    public ResponseEntity<InscripcionDTO> updateInscripcion(@PathVariable Long id, @Valid @RequestBody InscripcionDTO inscripcionDTO) {
         InscripcionDTO updatedInscripcion = inscripcionService.updateInscripcion(id, inscripcionDTO);
         return updatedInscripcion != null ? ResponseEntity.ok(updatedInscripcion) : ResponseEntity.notFound().build();
     }

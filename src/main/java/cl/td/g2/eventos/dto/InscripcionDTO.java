@@ -3,11 +3,17 @@ package cl.td.g2.eventos.dto;
 
 import java.time.LocalDateTime;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 public class InscripcionDTO {
 
     private Long id;
+    @NotNull(message = "El usuario es requerido")
     private Long usuarioId;
+    @NotNull(message = "El evento es requerido")
     private Long eventoId;
+    @NotBlank(message = "La fecha de inscripción es requerida")
     private LocalDateTime fechaInscripcion;
     
 	public Long getId() {
