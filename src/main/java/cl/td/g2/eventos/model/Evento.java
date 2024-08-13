@@ -144,4 +144,15 @@ public class Evento {
 	public void setFechaCreacion(LocalDateTime fechaCreacion) {
 		this.fechaCreacion = fechaCreacion;
 	}
+
+	public Evento(Long id, String titulo, LocalDateTime fechaInicio) {
+		super();
+		this.id = id;
+		this.titulo = titulo;
+		this.fechaInicio = fechaInicio;
+	}
+	public Evento() {
+		
+	}
+	
 }
