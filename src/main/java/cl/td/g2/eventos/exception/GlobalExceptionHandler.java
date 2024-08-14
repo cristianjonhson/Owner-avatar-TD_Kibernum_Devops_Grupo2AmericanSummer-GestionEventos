@@ -25,7 +25,6 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(NotFoundException.class)
 	public ResponseEntity<ErrorResponse> handleNotFoundException(NotFoundException exception) {
 		ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND, HttpStatus.NOT_FOUND.value(), exception.getMessage());
-		//return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.NOT_FOUND); // TODO revisar si los return dan la misma salida
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
 	}
 	
@@ -39,11 +38,10 @@ public class GlobalExceptionHandler {
 	protected ResponseEntity<Object> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
 		Map<String, Object> errorMap = new HashMap<>();
 		exception.getBindingResult().getFieldErrors().forEach(error -> {
-		//exception.getBindingResult().getAllErrors().forEach(error -> { // TODO revisar diferencia entre getFieldErrors y getAllErrors
 			errorMap.put(error.getField(), error.getDefaultMessage());
 		});
-		//return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorsMap); // TODO revisar diferencia al poner toString
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMap.toString());
+		ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST, HttpStatus.BAD_REQUEST.value(), errorMap.toString());
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
 	}
 	
 	/**
