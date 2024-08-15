@@ -17,6 +17,8 @@ public class UsuarioDTO {
     @NotBlank(message = "El email del Usuario es requerido")
     @Email
     private String email;
+    @NotBlank(message = "La contraseña del Usuario es requerida")
+    private String contrasena;
     @NotNull(message = "La fecha de registro es requerida")
     private LocalDateTime fechaRegistro;
     @NotBlank(message = "El rol del Usuario es requerido")
@@ -45,6 +47,12 @@ public class UsuarioDTO {
 	}
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	public String getContrasena() {
+		return contrasena;
+	}
+	public void setContrasena(String contrasena) {
+		this.contrasena = contrasena;
 	}
 	public LocalDateTime getFechaRegistro() {
 		return fechaRegistro;
