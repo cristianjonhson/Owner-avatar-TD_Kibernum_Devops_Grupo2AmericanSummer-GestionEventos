@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/ciudades")
@@ -26,9 +25,8 @@ public class CiudadController {
 
     @GetMapping("/{id}")
     public ResponseEntity<CiudadDTO> getCiudadById(@PathVariable Long id) {
-        Optional<CiudadDTO> ciudadDTO = ciudadService.getCiudadById(id);
-        return ciudadDTO.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        CiudadDTO ciudadDTO = ciudadService.getCiudadById(id);
+        return ResponseEntity.ok(ciudadDTO);
     }
 
     @PostMapping
@@ -40,7 +38,7 @@ public class CiudadController {
     @PutMapping("/{id}")
     public ResponseEntity<CiudadDTO> updateCiudad(@PathVariable Long id, @Valid @RequestBody CiudadDTO ciudadDTO) {
         CiudadDTO updatedCiudad = ciudadService.updateCiudad(id, ciudadDTO);
-        return updatedCiudad != null ? ResponseEntity.ok(updatedCiudad) : ResponseEntity.notFound().build();
+        return ResponseEntity.ok(updatedCiudad);
     }
 
     @DeleteMapping("/{id}")
