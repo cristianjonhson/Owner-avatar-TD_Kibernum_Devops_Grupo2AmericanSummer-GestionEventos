@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/eventos") // TODO sugerir como es la api, si es mejor poner la ruta /api/eventos
+@RequestMapping("/eventos")
 public class EventoController {
 
     @Autowired
@@ -24,16 +24,8 @@ public class EventoController {
     }
 
     @GetMapping("/{id}")
-    /*
     public ResponseEntity<EventoDTO> getEventoById(@PathVariable Long id) {
-        Optional<EventoDTO> eventoDTO = eventoService.getEventoById(id);
-        return eventoDTO.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
-    }
-    */
-    public ResponseEntity<EventoDTO> getEventoById(@PathVariable Long id) { // TODO probar si devuelve lo mismo que lo anterior comentado
         EventoDTO eventoDTO = eventoService.getEventoById(id);
-        //return eventoDTO != null ? ResponseEntity.ok(eventoDTO) : ResponseEntity.notFound().build();
         return ResponseEntity.ok(eventoDTO);
     }
 
@@ -46,7 +38,7 @@ public class EventoController {
     @PutMapping("/{id}")
     public ResponseEntity<EventoDTO> updateEvento(@Valid @PathVariable Long id, @RequestBody EventoDTO eventoDTO) {
         EventoDTO updatedEvento = eventoService.updateEvento(id, eventoDTO);
-        return updatedEvento != null ? ResponseEntity.ok(updatedEvento) : ResponseEntity.notFound().build(); // TODO preguntar porqué el return no es como el return del getEventoById
+        return ResponseEntity.ok(updatedEvento);
     }
 
     @DeleteMapping("/{id}")

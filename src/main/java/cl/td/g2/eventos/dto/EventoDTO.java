@@ -14,9 +14,9 @@ public class EventoDTO {
 	@NotBlank(message = "El título del Evento es requerido")
     private String titulo;
     private String descripcion;
-    @NotNull
+    @NotNull(message = "La fechaInicio no debe ser nula")
     private LocalDateTime fechaInicio;
-    @NotNull
+    @NotNull(message = "La fechaFin no debe ser nula")
     private LocalDateTime fechaFin;
     private String ubicacion;
     private Long organizadorId;
@@ -24,7 +24,7 @@ public class EventoDTO {
     private Long ciudadId;
     private BigDecimal valor;
     private String imagenHtml;
-    @NotNull
+    @NotNull(message = "La fechaCreacion no debe ser nula")
     private LocalDateTime fechaCreacion;
 	
     public Long getId() {

@@ -28,11 +28,6 @@ public class EventoService {
         return eventoMapper.toDTO(eventos);
     }
 
-    /*
-    public Optional<EventoDTO> getEventoById(Long id) {
-    	return eventoRepository.findById(id).map(eventoMapper::toDTO);
-    }
-    */
     public EventoDTO getEventoById(Long id) {
     	return eventoRepository.findById(id).map(eventoMapper::toDTO).orElseThrow(() -> new NotFoundException("Evento", "id", id));
     }
@@ -62,7 +57,6 @@ public class EventoService {
     }
 
     public void deleteEvento(Long id) {
-        //eventoRepository.deleteById(id);
     	if (eventoRepository.existsById(id)) {
     		try {
     			eventoRepository.deleteById(id);
