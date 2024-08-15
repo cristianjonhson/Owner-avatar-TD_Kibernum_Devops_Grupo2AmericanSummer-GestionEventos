@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/inscripciones")
@@ -26,9 +25,8 @@ public class InscripcionController {
 
     @GetMapping("/{id}")
     public ResponseEntity<InscripcionDTO> getInscripcionById(@PathVariable Long id) {
-        Optional<InscripcionDTO> inscripcionDTO = inscripcionService.getInscripcionById(id);
-        return inscripcionDTO.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        InscripcionDTO inscripcionDTO = inscripcionService.getInscripcionById(id);
+        return ResponseEntity.ok(inscripcionDTO);
     }
 
     @PostMapping
@@ -40,7 +38,7 @@ public class InscripcionController {
     @PutMapping("/{id}")
     public ResponseEntity<InscripcionDTO> updateInscripcion(@PathVariable Long id, @Valid @RequestBody InscripcionDTO inscripcionDTO) {
         InscripcionDTO updatedInscripcion = inscripcionService.updateInscripcion(id, inscripcionDTO);
-        return updatedInscripcion != null ? ResponseEntity.ok(updatedInscripcion) : ResponseEntity.notFound().build();
+        return ResponseEntity.ok(updatedInscripcion);
     }
 
     @DeleteMapping("/{id}")
