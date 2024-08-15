@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/categorias")
@@ -25,9 +24,8 @@ public class CategoriaController {
 
     @GetMapping("/{id}")
     public ResponseEntity<CategoriaDTO> getCategoriaById(@PathVariable Long id) {
-        Optional<CategoriaDTO> categoriaDTO = categoriaService.getCategoriaById(id);
-        return categoriaDTO.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        CategoriaDTO categoriaDTO = categoriaService.getCategoriaById(id);
+        return ResponseEntity.ok(categoriaDTO);
     }
 
     @PostMapping
@@ -39,7 +37,7 @@ public class CategoriaController {
     @PutMapping("/{id}")
     public ResponseEntity<CategoriaDTO> updateCategoria(@PathVariable Long id, @Valid @RequestBody CategoriaDTO categoriaDTO) {
         CategoriaDTO updatedCategoria = categoriaService.updateCategoria(id, categoriaDTO);
-        return updatedCategoria != null ? ResponseEntity.ok(updatedCategoria) : ResponseEntity.notFound().build();
+        return ResponseEntity.ok(updatedCategoria);
     }
 
     @DeleteMapping("/{id}")
