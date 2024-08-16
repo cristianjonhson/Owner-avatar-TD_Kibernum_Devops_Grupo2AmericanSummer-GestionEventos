@@ -54,4 +54,11 @@ public class UsuarioController {
         usuarioService.deleteUsuario(id);
         return ResponseEntity.noContent().build();
     }
+    
+    @PostMapping("/login")
+    @Operation(summary="Loguear un Usuario")
+    public ResponseEntity<Boolean> loginUsuario(@RequestBody UsuarioDTO usuarioDTO) {
+        Boolean resultLoginUsuario = usuarioService.loginUsuario(usuarioDTO.getEmail(), usuarioDTO.getContrasena());
+        return ResponseEntity.status(resultLoginUsuario ? HttpStatus.ACCEPTED : HttpStatus.UNAUTHORIZED).body(resultLoginUsuario);
+    }
 }
