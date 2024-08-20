@@ -2,13 +2,13 @@ package cl.td.g2.eventos.controller;
 
 import cl.td.g2.eventos.dto.CategoriaDTO;
 import cl.td.g2.eventos.service.CategoriaService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/categorias")
@@ -24,21 +24,20 @@ public class CategoriaController {
 
     @GetMapping("/{id}")
     public ResponseEntity<CategoriaDTO> getCategoriaById(@PathVariable Long id) {
-        Optional<CategoriaDTO> categoriaDTO = categoriaService.getCategoriaById(id);
-        return categoriaDTO.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        CategoriaDTO categoriaDTO = categoriaService.getCategoriaById(id);
+        return ResponseEntity.ok(categoriaDTO);
     }
 
     @PostMapping
-    public ResponseEntity<CategoriaDTO> createCategoria(@RequestBody CategoriaDTO categoriaDTO) {
+    public ResponseEntity<CategoriaDTO> createCategoria(@Valid @RequestBody CategoriaDTO categoriaDTO) {
         CategoriaDTO createdCategoria = categoriaService.createCategoria(categoriaDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdCategoria);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CategoriaDTO> updateCategoria(@PathVariable Long id, @RequestBody CategoriaDTO categoriaDTO) {
+    public ResponseEntity<CategoriaDTO> updateCategoria(@PathVariable Long id, @Valid @RequestBody CategoriaDTO categoriaDTO) {
         CategoriaDTO updatedCategoria = categoriaService.updateCategoria(id, categoriaDTO);
-        return updatedCategoria != null ? ResponseEntity.ok(updatedCategoria) : ResponseEntity.notFound().build();
+        return ResponseEntity.ok(updatedCategoria);
     }
 
     @DeleteMapping("/{id}")

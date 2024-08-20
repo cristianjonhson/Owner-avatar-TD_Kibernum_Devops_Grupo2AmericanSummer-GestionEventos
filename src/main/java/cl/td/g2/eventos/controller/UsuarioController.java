@@ -2,13 +2,14 @@ package cl.td.g2.eventos.controller;
 
 import cl.td.g2.eventos.dto.UsuarioDTO;
 import cl.td.g2.eventos.service.UsuarioService;
+import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/usuarios")
@@ -24,21 +25,20 @@ public class UsuarioController {
 
     @GetMapping("/{id}")
     public ResponseEntity<UsuarioDTO> getUsuarioById(@PathVariable Long id) {
-        Optional<UsuarioDTO> usuarioDTO = usuarioService.getUsuarioById(id);
-        return usuarioDTO.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        UsuarioDTO usuarioDTO = usuarioService.getUsuarioById(id);
+        return ResponseEntity.ok(usuarioDTO);
     }
 
     @PostMapping
-    public ResponseEntity<UsuarioDTO> createUsuario(@RequestBody UsuarioDTO usuarioDTO) {
+    public ResponseEntity<UsuarioDTO> createUsuario(@Valid @RequestBody UsuarioDTO usuarioDTO) {
         UsuarioDTO createdUsuario = usuarioService.createUsuario(usuarioDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUsuario);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UsuarioDTO> updateUsuario(@PathVariable Long id, @RequestBody UsuarioDTO usuarioDTO) {
+    public ResponseEntity<UsuarioDTO> updateUsuario(@PathVariable Long id, @Valid @RequestBody UsuarioDTO usuarioDTO) {
         UsuarioDTO updatedUsuario = usuarioService.updateUsuario(id, usuarioDTO);
-        return updatedUsuario != null ? ResponseEntity.ok(updatedUsuario) : ResponseEntity.notFound().build();
+        return ResponseEntity.ok(updatedUsuario);
     }
 
     @DeleteMapping("/{id}")

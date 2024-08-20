@@ -1,8 +1,11 @@
 package cl.td.g2.eventos.dto;
 
+import jakarta.validation.constraints.NotBlank;
+
 public class CategoriaDTO {
 
     private Long id;
+    @NotBlank(message = "El nombre de la Categoría es requerido")
     private String nombre;
     
 	public Long getId() {
