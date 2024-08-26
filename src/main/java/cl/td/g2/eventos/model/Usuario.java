@@ -3,9 +3,6 @@ package cl.td.g2.eventos.model;
 
 import jakarta.persistence.*;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-
 import java.time.LocalDateTime;
 
 @Entity
@@ -34,7 +31,15 @@ public class Usuario {
     @Column(nullable = false)
     private String rol = "usuario";
 
-	public Long getId() {
+	 // Constructor
+    public Usuario(Long id, String nombre, String email, String password) {
+        this.id = id;
+        this.nombre = nombre;
+        this.email = email;
+        this.contrasena = password;
+    }
+
+    public Long getId() {
 		return id;
 	}
 

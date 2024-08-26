@@ -13,7 +13,13 @@ public class Ciudad {
     @Column(nullable = false, unique = true)
     private String nombre;
 
-	public Long getId() {
+	 // Constructor
+	 public Ciudad(Long id, String nombre) {
+        this.id = id;
+        this.nombre = nombre;
+    }
+
+    public Long getId() {
 		return id;
 	}
 

@@ -23,6 +23,13 @@ public class Inscripcion {
     @Column(name = "fecha_inscripcion", nullable = false, updatable = false)
     private LocalDateTime fechaInscripcion = LocalDateTime.now();
 
+	// Constructor con parámetros
+    public Inscripcion(Usuario usuario, Evento evento) {
+        this.usuario = usuario;
+        this.evento = evento;
+        this.fechaInscripcion = LocalDateTime.now();
+    }
+	
 	public Long getId() {
 		return id;
 	}
