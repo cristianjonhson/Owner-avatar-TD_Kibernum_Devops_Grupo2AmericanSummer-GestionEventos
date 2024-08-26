@@ -25,14 +25,14 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     void deleteById(Long id);
     
     // Método para encontrar un usuario por nombre de usuario
-    Optional<Usuario> findByNombreUsuario(String nombreUsuario);
+    Optional<Usuario> findByNombre(String nombreUsuario);
 
     // Método para encontrar un usuario por correo electrónico
-    Optional<Usuario> findByCorreo(String correo);
+    Optional<Usuario> findByEmail(String correo);
 
     // Método para verificar si un usuario con el nombre de usuario especificado existe
-    boolean existsByNombreUsuario(String nombreUsuario);
+    boolean existsByNombre(String nombreUsuario);
 
     // Método para verificar si un usuario con el correo electrónico especificado existe
-    boolean existsByCorreo(String correo);
+    boolean existsByEmail(String correo);
 }

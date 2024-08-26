@@ -1,6 +1,8 @@
 package cl.td.g2.eventos.service;
 
 import cl.td.g2.eventos.dto.CategoriaDTO;
+import cl.td.g2.eventos.exception.BadRequestException;
+import cl.td.g2.eventos.exception.NotFoundException;
 import cl.td.g2.eventos.mapper.CategoriaMapper;
 import cl.td.g2.eventos.model.Categoria;
 import cl.td.g2.eventos.repository.CategoriaRepository;
@@ -8,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CategoriaService {
@@ -21,30 +22,51 @@ public class CategoriaService {
 
     public List<CategoriaDTO> getAllCategorias() {
         List<Categoria> categorias = categoriaRepository.findAll();
+        if (categorias == null || categorias.isEmpty()) {
+        	throw new NotFoundException("Categorías");
+        }
         return categoriaMapper.toDTO(categorias);
     }
 
-    public Optional<CategoriaDTO> getCategoriaById(Long id) {
-        return categoriaRepository.findById(id).map(categoriaMapper::toDTO);
+    public CategoriaDTO getCategoriaById(Long id) {
+        return categoriaRepository.findById(id).map(categoriaMapper::toDTO).orElseThrow(() -> new NotFoundException("Categoría", "id", id));
     }
 
     public CategoriaDTO createCategoria(CategoriaDTO categoriaDTO) {
         Categoria categoria = categoriaMapper.toEntity(categoriaDTO);
-        Categoria savedCategoria = categoriaRepository.save(categoria);
-        return categoriaMapper.toDTO(savedCategoria);
+        try {
+            Categoria savedCategoria = categoriaRepository.save(categoria);
+            return categoriaMapper.toDTO(savedCategoria);
+		} catch (Exception ex) {
+			throw new BadRequestException(ex.getMessage());
+		}
     }
 
     public CategoriaDTO updateCategoria(Long id, CategoriaDTO categoriaDTO) {
         if (categoriaRepository.existsById(id)) {
             Categoria categoria = categoriaMapper.toEntity(categoriaDTO);
             categoria.setId(id);
-            Categoria updatedCategoria = categoriaRepository.save(categoria);
-            return categoriaMapper.toDTO(updatedCategoria);
+            try {
+            	Categoria updatedCategoria = categoriaRepository.save(categoria);
+                return categoriaMapper.toDTO(updatedCategoria);
+    		} catch (Exception ex) {
+    			throw new BadRequestException(ex.getMessage());
+    		}
+            
         }
-        return null;
+        throw new NotFoundException("Categoría", "id", id);
     }
 
     public void deleteCategoria(Long id) {
-        categoriaRepository.deleteById(id);
+        if (categoriaRepository.existsById(id)) {
+    		try {
+    			categoriaRepository.deleteById(id);
+    		} catch (Exception ex) {
+    			throw new BadRequestException(ex.getMessage());
+    		}
+        }
+    	else {
+    		throw new NotFoundException("Categoría", "id", id);
+    	}
     }
 }

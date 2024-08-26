@@ -1,9 +1,11 @@
 package cl.td.g2.eventos.dto;
 
+import jakarta.validation.constraints.NotBlank;
 
 public class CiudadDTO {
 
     private Long id;
+    @NotBlank(message = "El nombre de la Ciudad es requerido")
     private String nombre;
     
 	public Long getId() {

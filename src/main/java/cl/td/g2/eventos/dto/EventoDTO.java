@@ -2,14 +2,21 @@ package cl.td.g2.eventos.dto;
 
 
 import java.time.LocalDateTime;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 import java.math.BigDecimal;
 
 public class EventoDTO {
 
 	private Long id;
+	@NotBlank(message = "El título del Evento es requerido")
     private String titulo;
     private String descripcion;
+    @NotNull(message = "La fechaInicio no debe ser nula")
     private LocalDateTime fechaInicio;
+    @NotNull(message = "La fechaFin no debe ser nula")
     private LocalDateTime fechaFin;
     private String ubicacion;
     private Long organizadorId;
@@ -17,6 +24,7 @@ public class EventoDTO {
     private Long ciudadId;
     private BigDecimal valor;
     private String imagenHtml;
+    @NotNull(message = "La fechaCreacion no debe ser nula")
     private LocalDateTime fechaCreacion;
 	
     public Long getId() {
