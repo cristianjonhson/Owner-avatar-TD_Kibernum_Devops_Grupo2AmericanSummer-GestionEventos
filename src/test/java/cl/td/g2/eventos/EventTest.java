@@ -3,8 +3,11 @@ package cl.td.g2.eventos;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
+import cl.td.g2.eventos.model.Categoria;
+import cl.td.g2.eventos.model.Ciudad;
 import cl.td.g2.eventos.model.Evento;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class EventTest {
@@ -12,13 +15,18 @@ public class EventTest {
     @Test
     public void testEventCreation() {
         // Crear un nuevo evento con todos los campos necesarios
+       // Crear las instancias de Categoria y Ciudad necesarias
+        Categoria categoria = new Categoria(1L, "Conferencia");
+        Ciudad ciudad = new Ciudad(1L, "Madrid");
+
+        // Crear un nuevo evento con todos los campos necesarios
         Evento event = new Evento("Conferencia de Tecnología", 
                                 LocalDateTime.of(2024, 8, 1, 10, 0), 
                                 LocalDateTime.of(2024, 8, 1, 12, 0), 
-                                "Conferencia", 
+                                categoria, 
                                 "Auditorio Principal", 
-                                "Madrid", 
-                                50.0);
+                                ciudad, 
+                                BigDecimal.valueOf(50.0));
 
         // Verificar que el objeto evento no sea nulo
         assertNotNull(event);
