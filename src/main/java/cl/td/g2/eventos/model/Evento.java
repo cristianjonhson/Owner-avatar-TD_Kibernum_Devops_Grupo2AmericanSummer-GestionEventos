@@ -151,8 +151,20 @@ public class Evento {
 		this.titulo = titulo;
 		this.fechaInicio = fechaInicio;
 	}
+
+	 // Constructor
+    public Evento(String nombre, LocalDateTime fechaInicio, LocalDateTime fechaFin, Categoria categoria, String ubicacion, Ciudad ciudad, BigDecimal valor) {
+        this.titulo = nombre;
+        this.fechaInicio = fechaInicio;
+        this.fechaFin = fechaFin;
+        this.categoria = categoria;
+        this.ubicacion = ubicacion;
+        this.ciudad = ciudad;
+        this.valor = valor;
+    }
+
 	public Evento() {
-		
+		//TODO Auto-generated constructor stub
 	}
 	
 }

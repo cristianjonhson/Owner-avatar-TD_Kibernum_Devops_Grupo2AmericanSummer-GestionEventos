@@ -34,7 +34,11 @@ public class Usuario {
     @Column(nullable = false)
     private String rol = "usuario";
 
-	public Long getId() {
+	public Usuario(long l, String string, String string2, String string3) {
+        //TODO Auto-generated constructor stub
+    }
+
+    public Long getId() {
 		return id;
 	}
 
