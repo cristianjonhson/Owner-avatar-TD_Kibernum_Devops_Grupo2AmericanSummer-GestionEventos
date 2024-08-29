@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <header>
+        <h1>Bienvenido al Sistema de Gestión de Eventos</h1>
+    </header>
+    <nav>
+        <ul>
+          
+        </ul>
+    </nav>
+    <main>
+        <section th:replace="~{::section}">
+            <!-- El contenido se inyectará aquí -->
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 Sistema de Gestión de Eventos</p>
+    </footer>
+</body>
+</html>
