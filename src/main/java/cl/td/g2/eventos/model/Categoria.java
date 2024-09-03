@@ -13,9 +13,13 @@ public class Categoria {
     @Column(nullable = false, unique = true)
     private String nombre;
 
-	  // Constructor
-	  public Categoria(Long id, String nombre) {
-        this.id = id;
+    // Constructor
+    public Categoria() {
+		super();
+	}
+
+    public Categoria(Long id, String nombre) {
+    	this.id = id;
         this.nombre = nombre;
     }
 
