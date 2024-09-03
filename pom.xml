@@ -34,19 +34,10 @@
         </dependency>
 
         <!-- Dependencia para Thymeleaf, utilizado para la generación de vistas HTML -->
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
-            <version>2.3.3.RELEASE</version>
         </dependency>
-        
-        <dependency>
-            <groupId>org.thymeleaf</groupId>
-            <artifactId>thymeleaf</artifactId>
-            <version>3.0.11.RELEASE</version>
-        </dependency>
-       
 
         <!-- Dependencia para Spring Web, utilizado para construir aplicaciones web y RESTful -->
         <dependency>
@@ -125,6 +116,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
+        
+        <dependency>
+			<groupId>org.thymeleaf.extras</groupId>
+			<artifactId>thymeleaf-extras-springsecurity6</artifactId>
+		</dependency>
     </dependencies>
 
     <build>

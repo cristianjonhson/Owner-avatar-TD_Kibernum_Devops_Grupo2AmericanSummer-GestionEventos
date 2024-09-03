@@ -7,7 +7,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class HomeController {
 
     @GetMapping("/home")
-    public String home() {
-        return "layout/home"; // Correcto, Thymeleaf buscará en src/main/resources/templates/layout/home.html
+    public String getHomePage() {
+        return "home"; // Correcto, Thymeleaf buscará en src/main/resources/templates/layout/home.html
+    }
+
+    @GetMapping
+    public String getDefaultPage() {
+    	return "home";
+    }
+
+    @GetMapping("/login")
+    public String getLoginPage() {
+        return "login";
     }
 }
