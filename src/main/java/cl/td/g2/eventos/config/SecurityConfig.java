@@ -10,19 +10,21 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
-//@EnableWebSecurity
+@EnableWebSecurity
 //@EnableMethodSecurity
 public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
-        http.authorizeHttpRequests(request -> request.requestMatchers("/", "/styles/*", "/home", "/login").permitAll()
-                        .anyRequest().authenticated())
-                /*.formLogin(form -> form.loginPage("/login")
-                        .defaultSuccessUrl("/eventos", true)
-                        .permitAll())
-                .logout(LogoutConfigurer::permitAll)*/;
+    	http.authorizeHttpRequests(request -> request
+        		.requestMatchers("/", "/styles/*", "/home-tmp", "/home", "/login").permitAll()
+        		.requestMatchers("/categorias/**", "/ciudades/**", "/eventos/**", "/inscripciones/**", "/usuarios/**").permitAll()
+        		.anyRequest().authenticated())
+        	/*.formLogin(form -> form
+        		.loginPage("/login")
+        		.defaultSuccessUrl("/eventos", true)
+        		.permitAll())
+        	.logout(LogoutConfigurer::permitAll)*/;
         return http.build();
     }
 
