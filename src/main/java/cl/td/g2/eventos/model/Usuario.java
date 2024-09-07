@@ -31,15 +31,19 @@ public class Usuario {
     @Column(nullable = false)
     private String rol = "usuario";
 
-	 // Constructor
+    // Constructor
+    public Usuario() {
+		super();
+	}
+
     public Usuario(Long id, String nombre, String email, String password) {
         this.id = id;
         this.nombre = nombre;
         this.email = email;
         this.contrasena = password;
-    }
+    }    
 
-    public Long getId() {
+	public Long getId() {
 		return id;
 	}
 

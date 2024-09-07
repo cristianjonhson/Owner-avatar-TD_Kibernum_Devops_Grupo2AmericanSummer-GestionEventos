@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.time.LocalDateTime;
 
 @SpringBootTest
-class EventTest {
+class G2GestionEventosApplicationTests {
 
     @Test
     void testEventCreation() {

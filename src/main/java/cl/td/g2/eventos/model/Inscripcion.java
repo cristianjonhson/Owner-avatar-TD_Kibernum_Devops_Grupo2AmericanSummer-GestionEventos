@@ -23,6 +23,11 @@ public class Inscripcion {
     @Column(name = "fecha_inscripcion", nullable = false, updatable = false)
     private LocalDateTime fechaInscripcion = LocalDateTime.now();
 
+    // Constructor
+	public Inscripcion() {
+		super();
+	}
+
 	// Constructor con parámetros
     public Inscripcion(Usuario usuario, Evento evento) {
         this.usuario = usuario;
