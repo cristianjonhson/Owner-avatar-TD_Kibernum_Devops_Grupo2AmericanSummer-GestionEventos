@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
  * 
@@ -28,10 +29,14 @@ public class FormEventoController {
    }
    
    @PostMapping("/eventos/guardar")
-   public String guardarEvento(@ModelAttribute EventoDTO eventoDTO) {
-       // Aquí guardas el evento
-	   eventoService.createEvento(eventoDTO);
-       return "redirect:/eventos"; // Redirige a una lista de eventos o a otra página
+   public String guardarEvento(@ModelAttribute EventoDTO eventoDTO, RedirectAttributes redirectAttributes) {
+       try {
+           eventoService.createEvento(eventoDTO);
+           redirectAttributes.addFlashAttribute("message", "Evento creado exitosamente!");
+       } catch (Exception e) {
+           redirectAttributes.addFlashAttribute("errorMessage", "Ocurrió un error al crear el evento.");
+       }
+       return "redirect:/eventos/nuevo";
    }
 
 
