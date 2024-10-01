@@ -107,3 +107,15 @@ footer {
     color: white; /* Color del texto al pasar el ratón sobre una fecha */
     border-radius: 50%; /* Hacer el fondo de la fecha redondo al pasar el ratón */
 }
+
+/* Reduce el espacio entre las columnas */
+.row.my-5 {
+    margin-top: 1rem !important; /* reduce el margen superior */
+    margin-bottom: 1rem !important; /* reduce el margen inferior */
+}
+
+/* Reduce el espacio entre las cards */
+.card {
+    margin-bottom: 1rem; /* reduce el espacio debajo de cada card */
+}
+
