@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendario de Eventos</title>
+    <!-- FullCalendar CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1 class="my-4">Calendario de Eventos</h1>
+        <div id="calendar"></div>
+    </div>
+
+    <!-- FullCalendar JS -->
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+    <script th:inline="javascript">
+        // Asegúrate de que Thymeleaf pase un JSON válido como 'eventosJson'
+        var eventos = /*[[${eventosJson}]]*/ [];
+    
+        document.addEventListener('DOMContentLoaded', function() {
+            var calendarEl = document.getElementById('calendar');
+    
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                locale: 'es',
+                events: eventos,  // Aquí pasamos los eventos obtenidos del backend
+                eventClick: function(info) {
+                    alert('Evento: ' + info.event.title + '\nFecha: ' + info.event.start);
+                }
+            });
+    
+            calendar.render();
+        });
+    </script>
+    
+</body>
+</html>
