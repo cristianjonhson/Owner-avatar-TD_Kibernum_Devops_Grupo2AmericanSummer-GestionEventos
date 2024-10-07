@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Categoría</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <div class="container">
+        <h2 class="my-4">Editar Categoría</h2>
+        <form id="editarForm" th:action="@{/categoria/editar/{id}(id=*{id})}" th:object="${categoria}" method="post">
+            <div class="form-group">
+                <label for="nombre">Nombre de la Categoría</label>
+                <input type="text" id="nombre" class="form-control" th:field="*{nombre}" required>
+            </div>
+            <button type="button" class="btn btn-primary" onclick="confirmEdit()">Guardar Cambios</button>
+        </form>              
+    </div>
+
+    <!-- Script para SweetAlert2 -->
+    <script>
+        function confirmEdit() {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "Vas a actualizar esta categoría",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, guardar cambios',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById("editarForm").submit(); // Enviar el formulario si se confirma
+                }
+            })
+        }
+
+        // Mostrar mensaje de éxito si el formulario se envía correctamente
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('success') === 'true') {
+            Swal.fire({
+                title: '¡Éxito!',
+                text: 'La categoría ha sido actualizada correctamente.',
+                icon: 'success',
+                confirmButtonText: 'Ok'
+            });
+        }
+
+        // Mostrar mensaje de error si hubo un fallo
+        if (urlParams.get('error') === 'true') {
+            Swal.fire({
+                title: 'Error',
+                text: 'Hubo un problema al actualizar la categoría.',
+                icon: 'error',
+                confirmButtonText: 'Intentar nuevamente'
+            });
+        }
+    </script>
+</body>
+</html>
