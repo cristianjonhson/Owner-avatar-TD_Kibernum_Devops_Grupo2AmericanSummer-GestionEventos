@@ -67,4 +67,16 @@ public class FormCategoriaController {
         return "redirect:/categoria/editar/{id}";
     }
 
+    @PostMapping("/categoria/eliminar/{id}")
+    public String eliminarCategoria(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        try {
+            categoriaService.deleteCategoria(id);
+            // Agregar el atributo de éxito
+            redirectAttributes.addAttribute("deleted", true);
+            return "redirect:/categoria/editar/{id}";
+        } catch (Exception e) {
+            return "redirect:/categorias?error=true"; // Redirige con un mensaje de error
+        }
+    }
+
 }
