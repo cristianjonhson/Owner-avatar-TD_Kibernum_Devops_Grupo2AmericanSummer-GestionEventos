@@ -2,14 +2,18 @@ package cl.td.g2.eventos.controller.views;
 
 import cl.td.g2.eventos.dto.CategoriaDTO;
 import cl.td.g2.eventos.service.CategoriaService;
+import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class FormCategoriaController {
@@ -36,4 +40,31 @@ public class FormCategoriaController {
             return "category/form";
         }
     }
+
+    @GetMapping("/categoria/editar/{id}")
+    public String mostrarFormularioEdicion(@PathVariable("id") Long id, Model model) {
+        CategoriaDTO categoria = categoriaService.getCategoriaById(id);
+        if (categoria == null) {
+            return "redirect:/error"; // O cualquier página de error que prefieras
+        }
+        model.addAttribute("categoria", categoria);
+        return "category/edit";
+    }
+
+    @PostMapping("/categoria/editar/{id}")
+    public String editarCategoria(
+            @PathVariable Long id,
+            @Valid @ModelAttribute("categoria") CategoriaDTO categoriaDTO,
+            BindingResult result,
+            RedirectAttributes redirectAttributes) {
+
+        if (result.hasErrors()) {
+            return "category/edit"; // Volver a mostrar el formulario si hay errores
+        }
+
+        categoriaService.updateCategoria(id, categoriaDTO);
+        redirectAttributes.addAttribute("success", true);
+        return "redirect:/categoria/editar/{id}";
+    }
+
 }

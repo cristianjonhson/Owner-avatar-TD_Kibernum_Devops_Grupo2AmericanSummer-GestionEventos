@@ -29,7 +29,9 @@ public class CategoriaService {
     }
 
     public CategoriaDTO getCategoriaById(Long id) {
-        return categoriaRepository.findById(id).map(categoriaMapper::toDTO).orElseThrow(() -> new NotFoundException("Categoría", "id", id));
+        return categoriaRepository.findById(id)
+                .map(categoriaMapper::toDTO)
+                .orElseThrow(() -> new NotFoundException("Categoría", "id", id));
     }
 
     public CategoriaDTO createCategoria(CategoriaDTO categoriaDTO) {
@@ -43,18 +45,20 @@ public class CategoriaService {
     }
 
     public CategoriaDTO updateCategoria(Long id, CategoriaDTO categoriaDTO) {
-        if (categoriaRepository.existsById(id)) {
-            Categoria categoria = categoriaMapper.toEntity(categoriaDTO);
-            categoria.setId(id);
-            try {
-            	Categoria updatedCategoria = categoriaRepository.save(categoria);
-                return categoriaMapper.toDTO(updatedCategoria);
-    		} catch (Exception ex) {
-    			throw new BadRequestException(ex.getMessage());
-    		}
-            
+        // Buscar la entidad existente directamente
+        Categoria categoria = categoriaRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Categoría", "id", id));
+
+        // Mapear los cambios desde el DTO a la entidad existente
+        categoriaMapper.updateEntityFromDTO(categoriaDTO, categoria);
+
+        try {
+            // Guardar la entidad actualizada
+            Categoria updatedCategoria = categoriaRepository.save(categoria);
+            return categoriaMapper.toDTO(updatedCategoria);
+        } catch (Exception ex) {
+            throw new BadRequestException("Error actualizando la categoría: " + ex.getMessage());
         }
-        throw new NotFoundException("Categoría", "id", id);
     }
 
     public void deleteCategoria(Long id) {
