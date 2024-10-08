@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -50,7 +49,8 @@ public class FormCategoriaController {
         }
     }
 
-        @GetMapping("/categoria/editar/{id}")
+    // Mostrar el formulario de edición de una categoría existente
+    @GetMapping("/categoria/editar/{id}")
     public String mostrarFormularioEdicion(@PathVariable("id") Long id, Model model) {
         CategoriaDTO categoria = categoriaService.getCategoriaById(id);
         if (categoria == null) {
@@ -60,7 +60,8 @@ public class FormCategoriaController {
         return "category/edit";
     }
 
-        @PostMapping("/categoria/editar/{id}")
+    // Actualizar una categoría existente
+    @PostMapping("/categoria/editar/{id}")
     public String editarCategoria(
             @PathVariable Long id,
             @Valid @ModelAttribute("categoria") CategoriaDTO categoriaDTO,
@@ -88,12 +89,11 @@ public class FormCategoriaController {
         }
     }
 
-        @GetMapping("/categoria/lista")
-    public String listarCategorias(Model model, @RequestParam(required = false) Boolean deleted) {
-        List<CategoriaDTO> categorias = categoriaService.getAllCategorias(); // Método para obtener las categorías
+    // Listar todas las categorías
+    @GetMapping("/categoria/lista")
+    public String listarCategorias(Model model) {
+        List<CategoriaDTO> categorias = categoriaService.getAllCategorias(); // Obtener todas las categorías
         model.addAttribute("categorias", categorias);
-        return "category/list"; // Nombre de la plantilla Thymeleaf
+        return "category/list"; // Nombre de la plantilla que lista las categorías
     }
-
-
 }
