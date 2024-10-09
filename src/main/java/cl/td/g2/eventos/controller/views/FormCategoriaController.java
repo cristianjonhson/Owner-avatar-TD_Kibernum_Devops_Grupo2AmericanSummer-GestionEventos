@@ -4,6 +4,8 @@ import cl.td.g2.eventos.dto.CategoriaDTO;
 import cl.td.g2.eventos.service.CategoriaService;
 import jakarta.validation.Valid;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,22 +27,29 @@ public class FormCategoriaController {
     @GetMapping("/categorias/nueva")
     public String mostrarFormularioCategoria(Model model) {
         model.addAttribute("categoriaDTO", new CategoriaDTO());
-        return "category/form"; // Asegúrate de que la plantilla esté en templates/categoria/form.html
+        return "category/form";
     }
 
-    // Guardar la categoría
+    // Guardar la categoría y redirigir al listado
     @PostMapping("/categorias/guardar")
-    public String guardarCategoria(@ModelAttribute @Validated CategoriaDTO categoriaDTO, Model model) {
+    public String guardarCategoria(@ModelAttribute @Validated CategoriaDTO categoriaDTO,
+            BindingResult result,
+            RedirectAttributes redirectAttributes) {
+        if (result.hasErrors()) {
+            return "category/form"; // Volver al formulario si hay errores
+        }
         try {
             categoriaService.createCategoria(categoriaDTO);
-            model.addAttribute("message", "Categoría guardada exitosamente.");
-            return "redirect:/categorias/nueva"; // Redirige después de guardar
+            // Agregar un atributo para señalar que fue exitoso
+            redirectAttributes.addFlashAttribute("success", true);
+            return "redirect:/categoria/lista"; // Volver al formulario con el mensaje de éxito
         } catch (Exception e) {
-            model.addAttribute("errorMessage", "Hubo un error al guardar la categoría.");
-            return "category/form";
+            redirectAttributes.addFlashAttribute("errorMessage", "Hubo un error al guardar la categoría.");
+            return "category/form"; // Si hay error, se queda en el formulario
         }
     }
 
+    // Mostrar el formulario de edición de una categoría existente
     @GetMapping("/categoria/editar/{id}")
     public String mostrarFormularioEdicion(@PathVariable("id") Long id, Model model) {
         CategoriaDTO categoria = categoriaService.getCategoriaById(id);
@@ -51,6 +60,7 @@ public class FormCategoriaController {
         return "category/edit";
     }
 
+    // Actualizar una categoría existente
     @PostMapping("/categoria/editar/{id}")
     public String editarCategoria(
             @PathVariable Long id,
@@ -67,7 +77,7 @@ public class FormCategoriaController {
         return "redirect:/categoria/editar/{id}";
     }
 
-    @PostMapping("/categoria/eliminar/{id}")
+        @PostMapping("/categoria/eliminar/{id}")
     public String eliminarCategoria(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         try {
             categoriaService.deleteCategoria(id);
@@ -79,4 +89,11 @@ public class FormCategoriaController {
         }
     }
 
+    // Listar todas las categorías
+    @GetMapping("/categoria/lista")
+    public String listarCategorias(Model model) {
+        List<CategoriaDTO> categorias = categoriaService.getAllCategorias(); // Obtener todas las categorías
+        model.addAttribute("categorias", categorias);
+        return "category/list"; // Nombre de la plantilla que lista las categorías
+    }
 }
