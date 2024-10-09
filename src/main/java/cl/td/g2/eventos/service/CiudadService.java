@@ -29,7 +29,9 @@ public class CiudadService {
     }
 
     public CiudadDTO getCiudadById(Long id) {
-        return ciudadRepository.findById(id).map(ciudadMapper::toDTO).orElseThrow(() -> new NotFoundException("Ciudad", "id", id));
+        return ciudadRepository.findById(id)
+                .map(ciudadMapper::toDTO)
+                .orElseThrow(() -> new NotFoundException("Ciudad", "id", id));
     }
 
     public CiudadDTO createCiudad(CiudadDTO ciudadDTO) {
@@ -43,17 +45,20 @@ public class CiudadService {
     }
 
     public CiudadDTO updateCiudad(Long id, CiudadDTO ciudadDTO) {
-        if (ciudadRepository.existsById(id)) {
-        	Ciudad ciudad = ciudadMapper.toEntity(ciudadDTO);
-            ciudad.setId(id);
-            try {
-                Ciudad updatedCiudad = ciudadRepository.save(ciudad);
-                return ciudadMapper.toDTO(updatedCiudad);
-    		} catch (Exception ex) {
-    			throw new BadRequestException(ex.getMessage());
-    		}
+        // Buscar la entidad existente directamente
+        Ciudad ciudad = ciudadRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Ciudad", "id", id));
+
+        // Mapear los cambios desde el DTO a la entidad existente
+        ciudadMapper.updateEntityFromDTO(ciudadDTO, ciudad);
+
+        try {
+            // Guardar la entidad actualizada
+            Ciudad updatedCiudad = ciudadRepository.save(ciudad);
+            return ciudadMapper.toDTO(updatedCiudad);
+        } catch (Exception ex) {
+            throw new BadRequestException("Error actualizando la ciudad: " + ex.getMessage());
         }
-        throw new NotFoundException("Ciudad", "id", id);
     }
 
     public void deleteCiudad(Long id) {
