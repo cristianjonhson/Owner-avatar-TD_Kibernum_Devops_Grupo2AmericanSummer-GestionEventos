@@ -42,7 +42,7 @@ public class FormCiudadController {
            ciudadService.createCiudad(ciudadDTO);
            // Agregar un atributo para señalar que fue exitoso
            redirectAttributes.addFlashAttribute("success", true);
-           return "redirect:/ciudad/lista"; // Volver al formulario con el mensaje de éxito
+           return "redirect:/ciudades/lista"; // Volver al formulario con el mensaje de éxito
        } catch (Exception e) {
            redirectAttributes.addFlashAttribute("errorMessage", "Hubo un error al guardar la ciudad.");
            return "city/form"; // Si hay error, se queda en el formulario
