@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Ciudades</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <div class="container">
+        <h2 class="my-4">Lista de Ciudades</h2>
+
+        <!-- Tabla de ciudades -->
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="ciudad : ${ciudades}">
+                    <td th:text="${ciudad.id}"></td>
+                    <td th:text="${ciudad.nombre}"></td>
+                    <td>
+                        <a th:href="@{/ciudad/editar/{id}(id=${ciudad.id})}" class="btn btn-warning">Editar</a>
+                        <form th:action="@{/ciudad/eliminar/{id}(id=${ciudad.id})}" method="post" style="display: inline;">
+                            <button type="button" class="btn btn-danger" onclick="confirmDelete('${ciudad.id}')">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <a href="/ciudades/nuevo" class="btn btn-success">Agregar Nueva Ciudad</a>
+    </div>
+
+    <script>
+        function confirmDelete(id) {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "Vas a eliminar esta ciudad",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Enviar el formulario si se confirma
+                    document.querySelector(`form[th\\:action*='eliminar/${id}']`).submit();
+                }
+            });
+        }
+    </script>
+</body>
+</html>
