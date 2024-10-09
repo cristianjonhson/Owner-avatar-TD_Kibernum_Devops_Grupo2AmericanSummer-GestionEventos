@@ -11,9 +11,9 @@ public class HomeController {
     	return "layout/home"; // Correcto, Thymeleaf buscará en src/main/resources/templates/layout/home.html
     }
 
-    @GetMapping("/home-tmp")
-    public String getHomeTmpPage() {
-        return "home_tmp";
+    @GetMapping("/about")
+    public String getAboutPage() {
+    	return "layout/about"; // Correcto, Thymeleaf buscará en src/main/resources/templates/layout/home.html
     }
 
     @GetMapping
