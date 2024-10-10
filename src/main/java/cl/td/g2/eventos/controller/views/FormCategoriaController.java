@@ -2,20 +2,16 @@ package cl.td.g2.eventos.controller.views;
 
 import cl.td.g2.eventos.dto.CategoriaDTO;
 import cl.td.g2.eventos.service.CategoriaService;
-import jakarta.validation.Valid;
-
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import jakarta.validation.Valid;
+import java.util.List;
 
 @Controller
 public class FormCategoriaController {
@@ -33,16 +29,16 @@ public class FormCategoriaController {
     // Guardar la categoría y redirigir al listado
     @PostMapping("/categorias/guardar")
     public String guardarCategoria(@ModelAttribute @Validated CategoriaDTO categoriaDTO,
-            BindingResult result,
-            RedirectAttributes redirectAttributes) {
+                                   BindingResult result,
+                                   RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
             return "category/form"; // Volver al formulario si hay errores
         }
         try {
             categoriaService.createCategoria(categoriaDTO);
-            // Agregar un atributo para señalar que fue exitoso
+             // Agregar un atributo para señalar que fue exitoso
             redirectAttributes.addFlashAttribute("success", true);
-            return "redirect:/categoria/lista"; // Volver al formulario con el mensaje de éxito
+            return "redirect:/categoria/lista"; // Redirigir con éxito
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", "Hubo un error al guardar la categoría.");
             return "category/form"; // Si hay error, se queda en el formulario
@@ -62,11 +58,10 @@ public class FormCategoriaController {
 
     // Actualizar una categoría existente
     @PostMapping("/categoria/editar/{id}")
-    public String editarCategoria(
-            @PathVariable Long id,
-            @Valid @ModelAttribute("categoria") CategoriaDTO categoriaDTO,
-            BindingResult result,
-            RedirectAttributes redirectAttributes) {
+    public String editarCategoria(@PathVariable Long id,
+                                  @Valid @ModelAttribute("categoria") CategoriaDTO categoriaDTO,
+                                  BindingResult result,
+                                  RedirectAttributes redirectAttributes) {
 
         if (result.hasErrors()) {
             return "category/edit"; // Volver a mostrar el formulario si hay errores
@@ -77,15 +72,17 @@ public class FormCategoriaController {
         return "redirect:/categoria/editar/{id}";
     }
 
-        @PostMapping("/categoria/eliminar/{id}")
+    // Eliminar una categoría y redirigir al listado
+    @GetMapping("/categoria/eliminar/{id}")
     public String eliminarCategoria(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         try {
             categoriaService.deleteCategoria(id);
-            // Agregar el atributo de éxito
-            redirectAttributes.addAttribute("deleted", true);
-            return "redirect:/categoria/editar/{id}";
+            // Agregar el atributo de éxito y redirigir a la lista de categorías
+            redirectAttributes.addFlashAttribute("deleted", true);
+            return "redirect:/categoria/lista"; // Redirigir al método que lista las categorías
         } catch (Exception e) {
-            return "redirect:/categorias?error=true"; // Redirige con un mensaje de error
+            redirectAttributes.addFlashAttribute("errorMessage", "Hubo un error al eliminar la categoría.");
+            return "redirect:/categoria/lista?error=true"; // Redirige con un mensaje de error si falla
         }
     }
 
