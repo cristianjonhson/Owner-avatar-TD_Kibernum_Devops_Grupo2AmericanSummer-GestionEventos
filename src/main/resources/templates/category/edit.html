@@ -23,12 +23,14 @@
             </div>
         </form>
         <div class="d-flex mt-3">
-            <!-- Formulario para eliminar la categoría -->
-            <button type="button" class="btn btn-primary me-2" onclick="return confirmEdit(event)">Guardar Cambios</button>
-           <!-- Botón para eliminar con confirmación -->
-                <button type="button" class="btn btn-danger"
-                th:onclick="'confirmDelete(' + ${categoria.id} + ')'">Eliminar</button>
-            
+            <!-- Botón para guardar cambios con ícono -->
+            <button type="button" class="btn btn-primary me-2" onclick="return confirmEdit(event)">
+                <i class="fas fa-save"></i> Guardar Cambios
+            </button>
+            <!-- Botón para eliminar con confirmación y ícono -->
+            <button type="button" class="btn btn-danger" th:onclick="'confirmDelete(' + ${categoria.id} + ')'">
+                <i class="fas fa-trash-alt"></i> Eliminar
+            </button>
         </div>
     </div>
 
@@ -96,38 +98,39 @@
                     cancelButtonText: 'Cancelar'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                // Realizar la solicitud GET usando fetch
-                fetch(`/categoria/eliminar/${id}`, { method: 'GET' })
-                    .then(response => {
-                        if (response.ok) {
-                            Swal.fire({
-                                title: '¡Éxito!',
-                                text: 'La categoría ha sido eliminada correctamente.',
-                                icon: 'success',
-                                confirmButtonText: 'Ok'
-                            }).then(() => {
-                                window.location.href = "/categoria/lista"; // Redirigir a la lista de categorías
+                        // Realizar la solicitud GET usando fetch
+                        fetch(`/categoria/eliminar/${id}`, { method: 'GET' })
+                            .then(response => {
+                                if (response.ok) {
+                                    Swal.fire({
+                                        title: '¡Éxito!',
+                                        text: 'La categoría ha sido eliminada correctamente.',
+                                        icon: 'success',
+                                        confirmButtonText: 'Ok'
+                                    }).then(() => {
+                                        window.location.href = "/categoria/lista"; // Redirigir a la lista de categorías
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        title: 'Error',
+                                        text: 'Hubo un problema al eliminar la categoría.',
+                                        icon: 'error',
+                                        confirmButtonText: 'Intentar nuevamente'
+                                    });
+                                }
+                            })
+                            .catch(() => {
+                                Swal.fire({
+                                    title: 'Error',
+                                    text: 'No se pudo eliminar la categoría.',
+                                    icon: 'error',
+                                    confirmButtonText: 'Intentar nuevamente'
+                                });
                             });
-                        } else {
-                            Swal.fire({
-                                title: 'Error',
-                                text: 'Hubo un problema al eliminar la categoría.',
-                                icon: 'error',
-                                confirmButtonText: 'Intentar nuevamente'
-                            });
-                        }
-                    })
-                    .catch(() => {
-                        Swal.fire({
-                            title: 'Error',
-                            text: 'No se pudo eliminar la categoría.',
-                            icon: 'error',
-                            confirmButtonText: 'Intentar nuevamente'
-                        });
-                    });
+                    }
+                });
             }
-        });
-    }
+
             // Verificar si hay mensajes de éxito o error desde la URL
             const urlParams = new URLSearchParams(window.location.search);
             const successMessage = urlParams.get('success') === 'true' ? 'La categoría ha sido actualizada correctamente.' : null;
