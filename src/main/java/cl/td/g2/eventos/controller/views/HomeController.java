@@ -13,7 +13,17 @@ public class HomeController {
 
     @GetMapping("/about")
     public String getAboutPage() {
-    	return "layout/about"; // Correcto, Thymeleaf buscará en src/main/resources/templates/layout/home.html
+    	return "layout/about"; // Correcto, Thymeleaf buscará en src/main/resources/templates/layout/about.html
+    }
+
+    @GetMapping("/terms")
+    public String getTermsPage() {
+    	return "layout/terms"; // Correcto, Thymeleaf buscará en src/main/resources/templates/layout/terms.html
+    }
+
+    @GetMapping("/privacy")
+    public String getPrivacyPage() {
+    	return "layout/privacy"; // Correcto, Thymeleaf buscará en src/main/resources/templates/layout/privacy.html
     }
 
     @GetMapping
