@@ -1,12 +1,71 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calendario de Eventos</title>
     <!-- FullCalendar CSS -->
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Estilo del calendario */
+        #calendar {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* Estilo de los eventos */
+        .fc-event {
+            background-color: #007bff; /* Color de fondo */
+            color: white; /* Color del texto */
+            border: none; /* Sin borde */
+            border-radius: 5px; /* Bordes redondeados */
+            
+            font-size: 1em; /* Tamaño de fuente más grande */
+            white-space: normal; /* Permite que el texto se ajuste a múltiples líneas */
+            line-height: 1.0; /* Mejora la separación entre líneas */
+            word-wrap: break-word; /* Permite que el texto largo se ajuste dentro del evento */
+            max-height: 240px; /* Limita la altura máxima del evento */
+            overflow: hidden; /* Evita que el texto desborde */
+        }
+
+        /* Estilo de la descripción */
+        .fc-event-description {
+            font-size: 0.6em; /* Un poco más pequeño para diferenciar del título */
+            color: #f1f1f1; /* Color ligeramente más claro que el texto del título */
+            margin-top: 5px; /* Espaciado adicional sobre la descripción */
+        }
+
+        /* Estilo para los eventos al pasar el mouse */
+        .fc-event:hover {
+            
+            cursor: pointer; /* Cambia el cursor */
+        }
+
+        /* Estilo del contenido de los eventos */
+        .fc-event-content {
+            display: flex;
+            flex-direction: column; /* Coloca el contenido en columnas */
+            align-items: flex-start;
+            justify-content: center;
+        }
+
+        /* Espaciado entre el título y la descripción */
+        .fc-event-content strong {
+            margin-bottom: 5px; /* Espaciado inferior */
+        }
+
+        /* Valor del evento */
+        .fc-event-content span.valor {
+            font-weight: bold; /* Negrita para el valor */
+            font-size: 0.85em; /* Tamaño más pequeño */
+            color: #f8d210; /* Color dorado para resaltar el valor */
+            margin-top: 5px;
+        }
+    </style>
 </head>
+
 <body>
     <div class="container">
         <h1 class="my-4">Calendario de Eventos</h1>
@@ -16,24 +75,61 @@
     <!-- FullCalendar JS -->
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
     <script th:inline="javascript">
-        // Asegúrate de que Thymeleaf pase un JSON válido como 'eventosJson'
-        var eventos = /*[[${eventosJson}]]*/ [];
-    
-        document.addEventListener('DOMContentLoaded', function() {
+        var eventos = /*[[${eventosJson}]]*/ '{}';
+        document.addEventListener('DOMContentLoaded', function () {
             var calendarEl = document.getElementById('calendar');
-    
+
+            // Convertimos el JSON a un formato adecuado para FullCalendar
+            var eventosConvertidos = JSON.parse(eventos).map(evento => ({
+                title: evento.titulo,
+                start: evento.fechaInicio,  // Aseguramos que fechaInicio esté en formato ISO
+                end: evento.fechaFin,       // Fecha de fin opcional
+                description: evento.descripcion,
+                location: evento.ubicacion,
+                image: evento.imagenHtml,
+                valor: evento.valor
+            }));
+
+            // Inicializamos FullCalendar
             var calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth',
-                locale: 'es',
-                events: eventos,  // Aquí pasamos los eventos obtenidos del backend
-                eventClick: function(info) {
-                    alert('Evento: ' + info.event.title + '\nFecha: ' + info.event.start);
+                initialView: 'dayGridMonth',  // Muestra la vista de calendario por mes
+                locale: 'es',                 // Localización en español
+                events: eventosConvertidos,   // Añade los eventos al calendario
+
+                // Personaliza cómo se muestra el contenido de los eventos
+                eventContent: function (info) {
+                    let element = document.createElement('div');
+                    element.classList.add('fc-event-content');
+
+                    // Muestra el título del evento
+                    element.innerHTML = '<strong>' + info.event.title + '</strong>';
+
+                    // Muestra descripción debajo del título
+                    if (info.event.extendedProps.description) {
+                        element.innerHTML += '<br>' + info.event.extendedProps.description;
+                    }
+
+                     // Espacio entre descripción y ubicación
+                    element.innerHTML += '<br>'; // Agrega un espacio adicional
+                    element.innerHTML += '<br>';
+                    // Muestra la ubicación
+                    if (info.event.extendedProps.location) {
+                    element.innerHTML += '<strong>Ubicación: </strong><span class="ubicacion">' + 
+                        info.event.extendedProps.location + '</span>';
+                }
+
+                    // Muestra el valor
+                    const valor = info.event.extendedProps.valor || 0; // Valor por defecto en caso de que no esté definido
+                    element.innerHTML += '<br><span class="valor">Valor: $ ' + valor.toFixed(2) + '</span>';
+
+                    return { domNodes: [element] };
                 }
             });
-    
+
+            // Renderiza el calendario con los eventos
             calendar.render();
         });
     </script>
-    
 </body>
+
 </html>
