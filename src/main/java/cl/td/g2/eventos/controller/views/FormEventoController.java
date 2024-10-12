@@ -27,38 +27,38 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class FormEventoController {
-	
+
 	@Autowired
 	private EventoService eventoService;
-	
+
 	@Autowired
 	private CategoriaService categoriaService;
-	
+
 	@Autowired
 	private CiudadService ciudadService;
-	
+
 	@Autowired
 	private UsuarioService usuarioService;
-	
+
 	// Mostrar el formulario para crear un nuevo evento
 	@GetMapping("/evento/nuevo")
 	public String mostrarFormularioEvento(Model model) {
 		model.addAttribute("eventoDTO", new EventoDTO());
 		model.addAttribute("categorias", categoriaService.getAllCategorias());
-        model.addAttribute("ciudades", ciudadService.getAllCiudades());
-        model.addAttribute("usuarios", usuarioService.getAllUsuarios());
+		model.addAttribute("ciudades", ciudadService.getAllCiudades());
+		model.addAttribute("usuarios", usuarioService.getAllUsuarios());
 		return "event/form";
 	}
-	
+
 	// Guardar el evento y redirigir al listado
 	@PostMapping("/evento/guardar")
 	public String guardarEvento(@ModelAttribute @Validated EventoDTO eventoDTO,
-           BindingResult result,
-           RedirectAttributes redirectAttributes) {
+			BindingResult result,
+			RedirectAttributes redirectAttributes) {
 		if (result.hasErrors()) {
 			return "event/form"; // Volver al formulario si hay errores
 		}
-		
+
 		try {
 			eventoService.createEvento(eventoDTO);
 			// Agregar un atributo para señalar que fue exitoso
@@ -79,8 +79,8 @@ public class FormEventoController {
 		}
 		model.addAttribute("evento", evento);
 		model.addAttribute("categorias", categoriaService.getAllCategorias());
-        model.addAttribute("ciudades", ciudadService.getAllCiudades());
-        model.addAttribute("usuarios", usuarioService.getAllUsuarios());
+		model.addAttribute("ciudades", ciudadService.getAllCiudades());
+		model.addAttribute("usuarios", usuarioService.getAllUsuarios());
 		return "event/edit";
 	}
 
@@ -97,7 +97,7 @@ public class FormEventoController {
 		redirectAttributes.addAttribute("success", true);
 		return "redirect:/evento/editar/{id}";
 	}
-	
+
 	// Eliminar un evento y redirigir al listado
 	@GetMapping("/evento/eliminar/{id}")
 	public String eliminarEvento(@PathVariable Long id, RedirectAttributes redirectAttributes) {
@@ -111,7 +111,7 @@ public class FormEventoController {
 			return "redirect:/evento/lista?error=true"; // Redirige con un mensaje de error
 		}
 	}
-	
+
 	// Listar todos los Eventos
 	@GetMapping("/evento/lista")
 	public String listarEventos(Model model) {
@@ -119,14 +119,36 @@ public class FormEventoController {
 		List<CiudadDTO> ciudades = ciudadService.getAllCiudades();
 		List<UsuarioDTO> usuarios = usuarioService.getAllUsuarios();
 		List<EventoDTO> eventos = eventoService.getAllEventos();
+
 		List<EventoListDTO> eventoList = eventos.stream().map(evento -> {
-			String nombreCategoria = categorias.stream().filter(categoria -> evento.getCategoriaId() == categoria.getId()).map(CategoriaDTO::getNombre).findFirst().orElse("");
-			UsuarioDTO usuario = usuarios.stream().filter(usr -> evento.getOrganizadorId() == usr.getId()).findFirst().orElse(new UsuarioDTO());
-			String nombreCiudad = ciudades.stream().filter(ciudad -> evento.getCiudadId() == ciudad.getId()).map(CiudadDTO::getNombre).findFirst().orElse("");
-			EventoListDTO eventoListDTO = new EventoListDTO(evento, nombreCategoria, usuario.getNombre()+" "+usuario.getApellido(), nombreCiudad);
-			return eventoListDTO;
+			// Buscar el nombre de la categoría
+			String nombreCategoria = categorias.stream()
+					.filter(categoria -> categoria.getId().equals(evento.getCategoriaId()))
+					.map(CategoriaDTO::getNombre)
+					.findFirst()
+					.orElse("");
+
+			// Buscar el organizador
+			UsuarioDTO usuario = usuarios.stream()
+					.filter(usr -> usr.getId().equals(evento.getOrganizadorId()))
+					.findFirst()
+					.orElse(new UsuarioDTO());
+			String nombreOrganizador = (usuario.getNombre() != null ? usuario.getNombre() : "") + " " +
+					(usuario.getApellido() != null ? usuario.getApellido() : "");
+
+			// Buscar el nombre de la ciudad
+			String nombreCiudad = ciudades.stream()
+					.filter(ciudad -> ciudad.getId().equals(evento.getCiudadId()))
+					.map(CiudadDTO::getNombre)
+					.findFirst()
+					.orElse("");
+
+			// Crear el DTO para la lista de eventos
+			return new EventoListDTO(evento, nombreOrganizador.trim(), nombreCategoria, nombreCiudad);
 		}).collect(Collectors.toList());
+
 		model.addAttribute("eventoList", eventoList);
 		return "event/list"; // Nombre de la plantilla que lista los eventos
 	}
+
 }
