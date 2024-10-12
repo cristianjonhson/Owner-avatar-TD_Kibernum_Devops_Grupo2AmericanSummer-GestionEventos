@@ -29,17 +29,23 @@
                     <td th:text="${ciudad.id}"></td>
                     <td th:text="${ciudad.nombre}"></td>
                     <td>
-                        <a th:href="@{/ciudad/editar/{id}(id=${ciudad.id})}" class="btn btn-warning">Editar</a>
+                        <a th:href="@{/ciudad/editar/{id}(id=${ciudad.id})}" class="btn btn-warning">
+                            <i class="fas fa-edit"></i> Editar</a>
                         <!-- Botón para eliminar con confirmación -->
                         <button type="button" class="btn btn-danger"
-                            th:onclick="'confirmDelete(' + ${ciudad.id} + ')'">Eliminar</button>
+                            th:onclick="'confirmDelete(' + ${ciudad.id} + ')'">
+                            <i class="fas fa-trash-alt"></i> Eliminar</button>
                     </td>
                     </td>
                 </tr>
             </tbody>
         </table>
 
-        <a href="/ciudades/nuevo" class="btn btn-success">Agregar Nueva Ciudad</a>
+        <a href="/ciudades/nuevo" class="btn btn-success">
+            <i class="fas fa-plus"></i> Agregar Nueva Ciudad</a>
+        <a href="/home" class="btn btn-primary">
+            <i class="fas fa-home"></i> Volver al inicio
+        </a>
     </div>
 
     <!-- Bootstrap JS y dependencias -->
