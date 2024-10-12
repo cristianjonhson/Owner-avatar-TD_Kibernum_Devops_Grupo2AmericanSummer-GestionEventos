@@ -56,13 +56,66 @@ main {
 }
 
 /* Estilos del pie de página */
+/* Estilos del pie de página */
 footer {
-    background-color: #333;
-    color: white;
-    text-align: center;
-    padding: 10px;
+    background-color: #333; /* Color de fondo más claro para un contraste suave */
+    color: #ffffff; /* Color de texto blanco */
+    padding: 20px; /* Padding superior e inferior */
     margin-top: auto; /* Empuja el footer al final de la página */
     width: 100%;
+    position: relative; /* Para asegurar que el footer se mantenga en su lugar */
+}
+
+/* Estilos para los enlaces en el footer */
+footer a {
+    color: #007bff; /* Color azul para los enlaces */
+    text-decoration: none; /* Quitar el subrayado */
+    transition: color 0.3 ease;  /* Transición suave al pasar el ratón */
+}
+
+footer p, footer a {
+    color: white;
+}
+
+footer a:hover {
+    color: #007bff; /* Color más oscuro al pasar el ratón */
+    text-decoration: underline; /* Subrayar al pasar el ratón */
+}
+
+/* Estilos para los encabezados del footer */
+footer h5 {
+    margin-bottom: 10px; /* Espaciado entre el título y el contenido */
+    font-weight: bold; /* Aumentar el peso de la fuente para los encabezados */
+}
+
+/* Estilo para el texto del pie de página */
+footer p {
+    margin: 6px 0; /* Espaciado para los párrafos */
+}
+
+/* Estilos para los iconos */
+footer i {
+    margin-right: 8px; /* Espaciado entre el icono y el texto */
+}
+
+/* Alinear el contenido a la izquierda */
+footer .container {
+    text-align: left; /* Cambiar el texto a la izquierda */
+}
+
+footer .container-fluid {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+footer .row {
+    display: flex;
+    justify-content: space-between; /* Distribuye los divs en la fila */
+    flex-wrap: wrap; /* Permite que se ajusten si la pantalla es pequeña */
+}
+
+footer .col-md-2 {
+    min-width: 180px; /* Ancho mínimo para evitar que se vuelvan demasiado pequeños */
 }
 
 /* Estilos adicionales para el contenedor del calendario */
@@ -72,6 +125,10 @@ footer {
 
 /* Ajustes específicos para dispositivos móviles */
 @media (max-width: 768px) {
+    footer .row {
+        justify-content: center; /* En pantallas pequeñas, centra los divs */
+    }
+
     nav ul li {
         display: block;
         margin-bottom: 10px;
