@@ -23,10 +23,12 @@
         </form>
         <div class="d-flex mt-3"></div>
         <!-- Formulario para eliminar la categoría -->
-        <button type="button" class="btn btn-primary me-2" onclick="return confirmEdit(event)">Guardar Cambios</button>
+        <button type="button" class="btn btn-primary me-2" onclick="return confirmEdit(event)">
+            <i class="fas fa-save"></i> Guardar Cambios</button>
         <!-- Botón para eliminar con confirmación -->
         <button type="button" class="btn btn-danger"
-            th:onclick="'confirmDelete(' + ${ciudad.id} + ')'">Eliminar</button>
+            th:onclick="'confirmDelete(' + ${ciudad.id} + ')'">
+            <i class="fas fa-trash-alt"></i> Eliminar</button>
     </div>
     </div>
 
