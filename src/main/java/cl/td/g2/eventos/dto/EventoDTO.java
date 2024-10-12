@@ -3,6 +3,8 @@ package cl.td.g2.eventos.dto;
 
 import java.time.LocalDateTime;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -15,8 +17,10 @@ public class EventoDTO {
     private String titulo;
     private String descripcion;
     @NotNull(message = "La fechaInicio no debe ser nula")
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime fechaInicio;
     @NotNull(message = "La fechaFin no debe ser nula")
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime fechaFin;
     private String ubicacion;
     private Long organizadorId;
@@ -25,9 +29,29 @@ public class EventoDTO {
     private BigDecimal valor;
     private String imagenHtml;
     @NotNull(message = "La fechaCreacion no debe ser nula")
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime fechaCreacion;
 	
-    public Long getId() {
+    public EventoDTO() {
+		this.fechaCreacion = LocalDateTime.now();
+	}
+
+	public EventoDTO(EventoDTO evento) {
+		this.id = evento.id;
+		this.titulo = evento.titulo;
+		this.descripcion = evento.descripcion;
+		this.fechaInicio = evento.fechaInicio;
+		this.fechaFin = evento.fechaFin;
+		this.ubicacion = evento.ubicacion;
+		this.organizadorId = evento.organizadorId;
+		this.categoriaId = evento.categoriaId;
+		this.ciudadId = evento.ciudadId;
+		this.valor = evento.valor;
+		this.imagenHtml = evento.imagenHtml;
+		this.fechaCreacion = evento.fechaCreacion;
+	}
+
+	public Long getId() {
 		return id;
 	}
 	public void setId(Long id) {
