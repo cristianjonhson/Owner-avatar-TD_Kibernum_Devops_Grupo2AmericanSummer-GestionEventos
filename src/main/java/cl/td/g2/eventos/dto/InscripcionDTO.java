@@ -15,6 +15,17 @@ public class InscripcionDTO {
     @NotNull(message = "La fecha de inscripción es requerida")
     private LocalDateTime fechaInscripcion;
     
+    public InscripcionDTO(InscripcionDTO inscripcion) {
+		this.id = inscripcion.id;
+		this.usuarioId = inscripcion.usuarioId;
+		this.eventoId = inscripcion.eventoId;
+		this.fechaInscripcion = inscripcion.fechaInscripcion;
+	}
+    
+	public InscripcionDTO() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public Long getId() {
 		return id;
 	}

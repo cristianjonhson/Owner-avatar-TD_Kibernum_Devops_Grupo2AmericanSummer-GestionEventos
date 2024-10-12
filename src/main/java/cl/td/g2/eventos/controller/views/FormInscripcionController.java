@@ -1,8 +1,13 @@
 package cl.td.g2.eventos.controller.views;
 
 
+import cl.td.g2.eventos.dto.EventoDTO;
 import cl.td.g2.eventos.dto.InscripcionDTO;
+import cl.td.g2.eventos.dto.InscripcionListDTO;
+import cl.td.g2.eventos.dto.UsuarioDTO;
+import cl.td.g2.eventos.service.EventoService;
 import cl.td.g2.eventos.service.InscripcionService;
+import cl.td.g2.eventos.service.UsuarioService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,12 +19,19 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import jakarta.validation.Valid;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class FormInscripcionController {
 
     @Autowired
     private InscripcionService inscripcionService;
+    
+    @Autowired
+	private UsuarioService usuarioService;
+    
+    @Autowired
+	private EventoService eventoService;
 
     // Mostrar el formulario de inscripción
     @GetMapping("/inscripciones/nueva")
@@ -91,8 +103,16 @@ public class FormInscripcionController {
     // Listar todas las inscripciones
     @GetMapping("/inscripciones/lista")
     public String listarInscripciones(Model model) {
+    	List<UsuarioDTO> usuarios = usuarioService.getAllUsuarios();
+    	List<EventoDTO> eventos = eventoService.getAllEventos();
         List<InscripcionDTO> inscripciones = inscripcionService.getAllInscripciones(); // Obtener todas las inscripciones
-        model.addAttribute("inscripciones", inscripciones);
+        List<InscripcionListDTO> inscripcionList = inscripciones.stream().map(inscripcion -> {
+			UsuarioDTO usuario = usuarios.stream().filter(usr -> inscripcion.getUsuarioId() == usr.getId()).findFirst().orElse(new UsuarioDTO());
+			String tituloEvento = eventos.stream().filter(evento -> inscripcion.getEventoId() == evento.getId()).map(EventoDTO::getTitulo).findFirst().orElse("");
+			InscripcionListDTO inscripcionListDTO = new InscripcionListDTO(inscripcion, usuario.getNombre()+" "+usuario.getApellido(), tituloEvento);
+			return inscripcionListDTO;
+		}).collect(Collectors.toList());
+        model.addAttribute("inscripcionList", inscripcionList);
         return "inscription/list"; // Nombre de la plantilla que lista las inscripciones en templates/inscription/list.html
     }
 }
