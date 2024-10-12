@@ -31,7 +31,7 @@
                     <td th:text="${inscripcion.id}"></td>
                     <td th:text="${inscripcion.usuarioId}"></td>
                     <td th:text="${inscripcion.eventoId}"></td>
-                    <td th:text="${inscripcion.fechaInscripcion}"></td>
+                    <td th:text="${#temporals.format(inscripcion.fechaInscripcion,'dd/MM/YYYY HH:mm')}"></td>
                     <td>
                         <a th:href="@{/inscripciones/editar/{id}(id=${inscripcion.id})}" class="btn btn-warning">
                             <i class="fas fa-edit"></i> Editar

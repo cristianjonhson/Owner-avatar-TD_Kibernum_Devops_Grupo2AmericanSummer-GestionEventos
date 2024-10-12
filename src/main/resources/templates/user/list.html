@@ -36,7 +36,7 @@
                     <td th:text="${usuario.apellido}"></td>
                     <td th:text="${usuario.email}"></td>
                     <td th:text="${usuario.contrasena}"></td>
-                    <td th:text="${usuario.fechaRegistro}"></td>
+                    <td th:text="${#temporals.format(usuario.fechaRegistro,'dd/MM/YYYY HH:mm')}"></td>
                     <td th:text="${usuario.rol}"></td>
                     <td>
                         <div class="d-flex">
