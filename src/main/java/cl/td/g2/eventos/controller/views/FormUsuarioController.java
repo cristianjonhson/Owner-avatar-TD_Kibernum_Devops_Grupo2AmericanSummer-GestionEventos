@@ -60,8 +60,8 @@ public class FormUsuarioController {
 
     // Actualizar un usuario existente
     @PostMapping("/usuarios/editar/{id}")
-    public String actualizarUsuario(@PathVariable("id") Long id, 
-                                    @Valid @ModelAttribute("usuarioDTO") UsuarioDTO usuarioDTO, 
+    public String actualizarUsuario(@PathVariable Long id, 
+                                    @Valid @ModelAttribute("usuario") UsuarioDTO usuarioDTO, 
                                     BindingResult result, 
                                     RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
@@ -79,7 +79,7 @@ public class FormUsuarioController {
 
     // Eliminar un usuario
     @GetMapping("/usuarios/eliminar/{id}")
-    public String eliminarUsuario(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
+    public String eliminarUsuario(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         try {
             usuarioService.deleteUsuario(id);
             redirectAttributes.addFlashAttribute("deleted", "Usuario eliminado exitosamente.");
