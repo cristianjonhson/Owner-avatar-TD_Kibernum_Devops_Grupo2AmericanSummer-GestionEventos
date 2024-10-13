@@ -9,7 +9,6 @@ import org.springframework.context.annotation.ComponentScan;
 public class G2GestionEventosApplication {
 
 	public static void main(String[] args) {
-		System.out.println("prueba webhook");
 		SpringApplication.run(G2GestionEventosApplication.class, args);
 	}
 }
