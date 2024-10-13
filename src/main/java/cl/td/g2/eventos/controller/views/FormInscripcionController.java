@@ -37,6 +37,8 @@ public class FormInscripcionController {
     @GetMapping("/inscripciones/nueva")
     public String mostrarFormularioInscripcion(Model model) {
         model.addAttribute("inscripcionDTO", new InscripcionDTO());
+        model.addAttribute("usuarios", usuarioService.getAllUsuarios());
+        model.addAttribute("eventos", eventoService.getAllEventos());
         return "inscription/form"; // Asegúrate de que la plantilla esté en templates/inscription/form.html
     }
 
@@ -65,13 +67,15 @@ public class FormInscripcionController {
             return "redirect:/error"; // Redirige a una página de error si no se encuentra la inscripción
         }
         model.addAttribute("inscripcion", inscripcion);
+        model.addAttribute("usuarios", usuarioService.getAllUsuarios());
+        model.addAttribute("eventos", eventoService.getAllEventos());
         return "inscription/edit"; // Asegúrate de tener un formulario de edición en templates/inscription/edit.html
     }
 
     // Actualizar una inscripción existente
     @PostMapping("/inscripciones/editar/{id}")
     public String editarInscripcion(@PathVariable Long id,
-                                    @Valid @ModelAttribute("inscripcionDTO") InscripcionDTO inscripcionDTO,
+                                    @Valid @ModelAttribute("inscripcion") InscripcionDTO inscripcionDTO,
                                     BindingResult result, RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
             return "inscription/edit"; // Volver al formulario si hay errores
@@ -107,10 +111,11 @@ public class FormInscripcionController {
     	List<EventoDTO> eventos = eventoService.getAllEventos();
         List<InscripcionDTO> inscripciones = inscripcionService.getAllInscripciones(); // Obtener todas las inscripciones
         List<InscripcionListDTO> inscripcionList = inscripciones.stream().map(inscripcion -> {
-			UsuarioDTO usuario = usuarios.stream().filter(usr -> inscripcion.getUsuarioId() == usr.getId()).findFirst().orElse(new UsuarioDTO());
+			UsuarioDTO usuario = usuarios.stream().filter(usr -> usr.getId().equals(inscripcion.getUsuarioId())).findFirst().orElse(new UsuarioDTO());
+			String participante = (usuario.getNombre() != null ? usuario.getNombre() : "") + " " +
+					(usuario.getApellido() != null ? usuario.getApellido() : "");
 			String tituloEvento = eventos.stream().filter(evento -> inscripcion.getEventoId() == evento.getId()).map(EventoDTO::getTitulo).findFirst().orElse("");
-			InscripcionListDTO inscripcionListDTO = new InscripcionListDTO(inscripcion, usuario.getNombre()+" "+usuario.getApellido(), tituloEvento);
-			return inscripcionListDTO;
+			return new InscripcionListDTO(inscripcion, participante.trim(), tituloEvento);
 		}).collect(Collectors.toList());
         model.addAttribute("inscripcionList", inscripcionList);
         return "inscription/list"; // Nombre de la plantilla que lista las inscripciones en templates/inscription/list.html

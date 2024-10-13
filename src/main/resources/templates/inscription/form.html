@@ -56,12 +56,20 @@
             <form id="inscripcionForm" action="#" th:action="@{/inscripciones/guardar}" th:object="${inscripcionDTO}"
                 method="post">
                 <div class="form-group">
-                    <label for="usuarioId">ID del Usuario</label>
-                    <input type="number" class="form-control" id="usuarioId" th:field="*{usuarioId}" required>
+                    <label for="usuarioId">Nombre del Participante</label>
+                    <select class="form-control" id="usuarioId" th:field="*{usuarioId}" required>
+                        <option value="">Selecciona...</option>
+                        <option th:each="usuario : ${usuarios}" th:value="${usuario.id}"
+                            th:text="${usuario.nombre} + ' ' + ${usuario.apellido}">
+                    </select>
                 </div>
                 <div class="form-group">
-                    <label for="eventoId">ID del Evento</label>
-                    <input type="number" class="form-control" id="eventoId" th:field="*{eventoId}" required>
+                    <label for="eventoId">Nombre del Evento</label>
+                    <select class="form-control" id="eventoId" th:field="*{eventoId}" required>
+                        <option value="">Selecciona...</option>
+                        <option th:each="evento : ${eventos}" th:value="${evento.id}"
+                            th:text="${evento.titulo}">
+                    </select>
                 </div>
                 <div class="form-group">
                     <label for="fechaInscripcion">Fecha de Inscripción</label>

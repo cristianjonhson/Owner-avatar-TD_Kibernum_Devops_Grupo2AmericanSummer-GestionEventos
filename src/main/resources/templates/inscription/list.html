@@ -56,10 +56,8 @@
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <!-- <th>Nombre del Participante</th>
-                    <th>Nombre del Evento</th> -->
-                        <th>Organizador</th>
-                        <th>Título del Evento</th>
+                        <th>Nombre del Participante</th>
+                        <th>Nombre del Evento</th>
                         <th>Fecha Inscripción</th>
                         <th>Acciones</th>
                     </tr>
@@ -67,9 +65,7 @@
                 <tbody>
                     <tr th:each="inscripcion : ${inscripcionList}">
                         <td th:text="${inscripcion.id}"></td>
-                        <!-- <td th:text="${inscripcion.usuarioId}"></td>
-                    <td th:text="${inscripcion.eventoId}"></td> -->
-                        <td th:text="${inscripcion.organizador}"></td>
+                        <td th:text="${inscripcion.participante}"></td>
                         <td th:text="${inscripcion.tituloEvento}"></td>
                         <td th:text="${#temporals.format(inscripcion.fechaInscripcion,'dd/MM/YYYY HH:mm')}"></td>
                         <td>

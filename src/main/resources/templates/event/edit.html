@@ -110,7 +110,7 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="organizadorId">Organizador</label>
-                            <select class="form-select" id="organizadorId" th:field="*{organizadorId}" required>
+                            <select class="form-control" id="organizadorId" th:field="*{organizadorId}" required>
                                 <option th:each="usuario : ${usuarios}" th:value="${usuario.id}"
                                     th:text="${usuario.nombre} + ' ' + ${usuario.apellido}"
                                     th:selected="${organizadorId == usuario.id}">
@@ -122,7 +122,7 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="categoriaId">Categoría</label>
-                            <select class="form-select" id="categoriaId" th:field="*{categoriaId}" required>
+                            <select class="form-control" id="categoriaId" th:field="*{categoriaId}" required>
                                 <option th:each="categoria : ${categorias}" th:value="${categoria.id}"
                                     th:text="${categoria.nombre}" th:selected="${categoriaId} == ${categoria.id}">
                             </select>
@@ -131,7 +131,7 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="ciudadId">Ciudad</label>
-                            <select class="form-select" id="ciudadId" th:field="*{ciudadId}" required>
+                            <select class="form-control" id="ciudadId" th:field="*{ciudadId}" required>
                                 <option th:each="ciudad : ${ciudades}" th:value="${ciudad.id}"
                                     th:text="${ciudad.nombre}" th:selected="${ciudadId} == ${ciudad.id}">
                             </select>
