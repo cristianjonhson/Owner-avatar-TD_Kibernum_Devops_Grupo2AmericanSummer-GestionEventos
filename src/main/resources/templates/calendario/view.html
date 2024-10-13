@@ -8,11 +8,23 @@
     <!-- FullCalendar CSS -->
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/styles/style.css}">
+    <!-- FontAwesome CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
-        /* Estilo del calendario */
+        /* Estilo del contenedor para el calendario y el mapa */
+        .content {
+            display: flex;
+            justify-content: space-between;
+        }
+
         #calendar {
-            max-width: 900px;
-            margin: 0 auto;
+            flex: 2; /* Ocupa 2 partes del espacio */
+            margin-right: 10px; /* Espaciado entre el calendario y el mapa */
+        }
+
+        #map {
+            flex: 1; /* Ocupa 1 parte del espacio */
         }
 
         /* Estilo de los eventos */
@@ -21,7 +33,6 @@
             color: white; /* Color del texto */
             border: none; /* Sin borde */
             border-radius: 5px; /* Bordes redondeados */
-            
             font-size: 1em; /* Tamaño de fuente más grande */
             white-space: normal; /* Permite que el texto se ajuste a múltiples líneas */
             line-height: 1.0; /* Mejora la separación entre líneas */
@@ -39,7 +50,6 @@
 
         /* Estilo para los eventos al pasar el mouse */
         .fc-event:hover {
-            
             cursor: pointer; /* Cambia el cursor */
         }
 
@@ -63,19 +73,73 @@
             color: #f8d210; /* Color dorado para resaltar el valor */
             margin-top: 5px;
         }
+
+        /* Estilo del mapa */
+        #map {
+            height: 400px; /* Altura del mapa */
+            width: 100%; /* Ancho del mapa */
+            display: none; /* Oculta el mapa inicialmente */
+        }
     </style>
 </head>
-
 <body>
-    <div class="container">
+     <!-- Menú de Navegación -->
+     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#" th:href="@{/}">
+            <i class="fas fa-calendar"></i> Gestión de Eventos
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#" th:href="@{/}"><i class="fas fa-home"></i> Inicio <span
+                            class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Servicios
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="#" th:href="@{/evento/lista}">Gestionar Eventos</a>
+                        <a class="dropdown-item" href="#" th:href="@{/calendario}">Ver Calendario</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" th:href="@{/about}"><i class="fas fa-info-circle"></i> Acerca de</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" th:href="@{/contact}"><i class="fas fa-envelope"></i> Contacto</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <main>
+        <div class="container mt-8">
         <h1 class="my-4">Calendario de Eventos</h1>
-        <div id="calendar"></div>
+        <div class="content">
+            <div id="calendar"></div>
+
+            <!-- Contenedor para el mapa -->
+            <div id="map"></div>
+        </div>
     </div>
+</main>
+<footer>
+    <div class="container">
+        <p>&copy; 2024 American Summer. Todos los derechos reservados.</p>
+    </div>
+</footer>
 
     <!-- FullCalendar JS -->
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDxb4gynsj-hVWIa-PRb_2KfyEopv0gWIo"></script>
     <script th:inline="javascript">
         var eventos = /*[[${eventosJson}]]*/ '{}';
+
         document.addEventListener('DOMContentLoaded', function () {
             var calendarEl = document.getElementById('calendar');
 
@@ -109,20 +173,64 @@
                         element.innerHTML += '<br>' + info.event.extendedProps.description;
                     }
 
-                     // Espacio entre descripción y ubicación
+                    // Espacio entre descripción y ubicación
                     element.innerHTML += '<br>'; // Agrega un espacio adicional
                     element.innerHTML += '<br>';
+
                     // Muestra la ubicación
                     if (info.event.extendedProps.location) {
-                    element.innerHTML += '<strong>Ubicación: </strong><span class="ubicacion">' + 
-                        info.event.extendedProps.location + '</span>';
-                }
+                        element.innerHTML += '<strong>Ubicación: </strong><span class="ubicacion">' + 
+                            info.event.extendedProps.location + '</span>';
+                    }
 
                     // Muestra el valor
                     const valor = info.event.extendedProps.valor || 0; // Valor por defecto en caso de que no esté definido
                     element.innerHTML += '<br><span class="valor">Valor: $ ' + valor.toFixed(2) + '</span>';
 
                     return { domNodes: [element] };
+                },
+
+                // Manejo del clic en el evento
+                eventClick: function (info) {
+                    const location = info.event.extendedProps.location;
+
+                    // Verifica que la ubicación no esté vacía
+                    if (location) {
+                        // Solicitud a la API de Geocoding
+                        const geocodingApiUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(location)}&key=AIzaSyDxb4gynsj-hVWIa-PRb_2KfyEopv0gWIo`;
+
+                        fetch(geocodingApiUrl)
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.results.length > 0) {
+                                    const latlng = data.results[0].geometry.location;
+                                    const latitud = latlng.lat;
+                                    const longitud = latlng.lng;
+
+                                    // Inicializa el mapa en la ubicación obtenida
+                                    var map = new google.maps.Map(document.getElementById('map'), {
+                                        center: { lat: latitud, lng: longitud },
+                                        zoom: 10
+                                    });
+
+                                    // Marca la ubicación
+                                    new google.maps.Marker({
+                                        position: { lat: latitud, lng: longitud },
+                                        map: map
+                                    });
+
+                                    // Muestra el mapa
+                                    document.getElementById('map').style.display = 'block';
+                                } else {
+                                    console.error('No se encontraron resultados para la ubicación:', location);
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error al obtener coordenadas:', error);
+                            });
+                    } else {
+                        console.error('Ubicación no válida:', location);
+                    }
                 }
             });
 
