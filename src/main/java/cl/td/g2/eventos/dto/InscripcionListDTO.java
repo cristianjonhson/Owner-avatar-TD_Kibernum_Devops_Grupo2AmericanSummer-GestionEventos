@@ -1,20 +1,20 @@
 package cl.td.g2.eventos.dto;
 
 public class InscripcionListDTO extends InscripcionDTO {
-	private String organizador;
+	private String participante;
     private String tituloEvento;
     
-    public InscripcionListDTO(InscripcionDTO inscripcionDTO, String organizador, String tituloEvento) {
+    public InscripcionListDTO(InscripcionDTO inscripcionDTO, String participante, String tituloEvento) {
     	super(inscripcionDTO);
-    	this.organizador = organizador;
+    	this.participante = participante;
     	this.tituloEvento = tituloEvento;
     }
     
-	public String getOrganizador() {
-		return organizador;
+	public String getParticipante() {
+		return participante;
 	}
-	public void setOrganizador(String organizador) {
-		this.organizador = organizador;
+	public void setParticipante(String participante) {
+		this.participante = participante;
 	}
 	public String getTituloEvento() {
 		return tituloEvento;

@@ -54,12 +54,20 @@
             <form id="editarForm" th:action="@{/inscripciones/editar/{id}(id=${inscripcion.id})}"
                 th:object="${inscripcion}" method="post">
                 <div class="form-group mb-3">
-                    <label for="nombre">Nombre del Participante</label>
-                    <input type="text" id="nombre" class="form-control" th:field="*{usuarioId}" required>
+                    <label for="usuarioId">Nombre del Participante</label>
+                    <select class="form-control" id="usuarioId" th:field="*{usuarioId}" required>
+                        <option th:each="usuario : ${usuarios}" th:value="${usuario.id}"
+                            th:text="${usuario.nombre} + ' ' + ${usuario.apellido}"
+                            th:selected="${usuarioId == usuario.id}">
+                        </option>
+                    </select>
                 </div>
                 <div class="form-group mb-3">
-                    <label for="evento">Nombre del Evento</label>
-                    <input type="text" id="evento" class="form-control" th:field="*{eventoId}" required>
+                    <label for="eventoId">Nombre del Evento</label>
+                    <select class="form-control" id="eventoId" th:field="*{eventoId}" required>
+                        <option th:each="evento : ${eventos}" th:value="${evento.id}"
+                            th:text="${evento.titulo}" th:selected="${eventoId == evento.id}">
+                    </select>
                 </div>
                 <div class="form-group mb-3">
                     <label for="fechaInscripcion">Fecha de Inscripción</label>

@@ -3,6 +3,8 @@ package cl.td.g2.eventos.dto;
 
 import java.time.LocalDateTime;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import jakarta.validation.constraints.NotNull;
 
 public class InscripcionDTO {
@@ -13,6 +15,7 @@ public class InscripcionDTO {
     @NotNull(message = "El evento es requerido")
     private Long eventoId;
     @NotNull(message = "La fecha de inscripción es requerida")
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime fechaInscripcion;
     
     public InscripcionDTO(InscripcionDTO inscripcion) {
