@@ -7,7 +7,6 @@ import cl.td.g2.eventos.mapper.UsuarioMapper;
 import cl.td.g2.eventos.model.Usuario;
 import cl.td.g2.eventos.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,70 +20,77 @@ public class UsuarioService {
 
     @Autowired
     private UsuarioMapper usuarioMapper;
-    
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
+    // Obtener todos los usuarios
     public List<UsuarioDTO> getAllUsuarios() {
         List<Usuario> usuarios = usuarioRepository.findAll();
         if (usuarios == null || usuarios.isEmpty()) {
-        	throw new NotFoundException("Usuarios");
+            throw new NotFoundException("Usuarios");
         }
         return usuarioMapper.toDTO(usuarios);
     }
 
+    // Obtener un usuario por su ID
     public UsuarioDTO getUsuarioById(Long id) {
-        return usuarioRepository.findById(id).map(usuarioMapper::toDTO).orElseThrow(() -> new NotFoundException("Usuario", "id", id));
+        return usuarioRepository.findById(id).map(usuarioMapper::toDTO)
+                .orElseThrow(() -> new NotFoundException("Usuario", "id", id));
     }
 
+    // Crear un nuevo usuario
     public UsuarioDTO createUsuario(UsuarioDTO usuarioDTO) {
-    	String encodedPassword = passwordEncoder.encode(usuarioDTO.getContrasena());
-    	usuarioDTO.setContrasena(encodedPassword);
-
+        // No se codifica la contraseña
         Usuario usuario = usuarioMapper.toEntity(usuarioDTO);
         try {
-        	Usuario savedUsuario = usuarioRepository.save(usuario);
+            Usuario savedUsuario = usuarioRepository.save(usuario);
             return usuarioMapper.toDTO(savedUsuario);
-		} catch (Exception ex) {
-			throw new BadRequestException(ex.getMessage());
-		}
+        } catch (Exception ex) {
+            throw new BadRequestException(ex.getMessage());
+        }
     }
 
+    // Actualizar un usuario existente
     public UsuarioDTO updateUsuario(Long id, UsuarioDTO usuarioDTO) {
         if (usuarioRepository.existsById(id)) {
-        	String encodedPassword = passwordEncoder.encode(usuarioDTO.getContrasena());
-        	usuarioDTO.setContrasena(encodedPassword);
-
-        	Usuario usuario = usuarioMapper.toEntity(usuarioDTO);
+            // No se codifica la contraseña
+            Usuario usuario = usuarioMapper.toEntity(usuarioDTO);
             usuario.setId(id);
             try {
-            	Usuario updatedUsuario = usuarioRepository.save(usuario);
+                Usuario updatedUsuario = usuarioRepository.save(usuario);
                 return usuarioMapper.toDTO(updatedUsuario);
-    		} catch (Exception ex) {
-    			throw new BadRequestException(ex.getMessage());
-    		}
+            } catch (Exception ex) {
+                throw new BadRequestException(ex.getMessage());
+            }
         }
         throw new NotFoundException("Usuario", "id", id);
     }
 
+    // Eliminar un usuario
     public void deleteUsuario(Long id) {
         if (usuarioRepository.existsById(id)) {
-    		try {
-    			usuarioRepository.deleteById(id);
-    		} catch (Exception ex) {
-    			throw new BadRequestException(ex.getMessage());
-    		}
+            try {
+                usuarioRepository.deleteById(id);
+            } catch (Exception ex) {
+                throw new BadRequestException(ex.getMessage());
+            }
+        } else {
+            throw new NotFoundException("Usuario", "id", id);
         }
-    	else {
-    		throw new NotFoundException("Usuario", "id", id);
-    	}
     }
-    
+
+    // Validar el inicio de sesión del usuario
     public boolean loginUsuario(String email, String contrasena) {
-    	Optional<Usuario> usuarioByEmail = usuarioRepository.findByEmail(email);
-        if (usuarioByEmail != null) {
-            return passwordEncoder.matches(contrasena, usuarioByEmail.map(usr -> usr.getContrasena()).orElse(""));
+        Optional<Usuario> usuarioByEmail = usuarioRepository.findByEmail(email);
+        if (usuarioByEmail.isPresent()) {
+            // Comparar contraseñas en texto plano
+            return contrasena.equals(usuarioByEmail.get().getContrasena());
         }
         return false;
+    }
+
+    // Buscar un usuario por su email
+    public UsuarioDTO findUsuarioByEmail(String email) {
+        return usuarioRepository.findByEmail(email)
+                .map(usuario -> usuarioMapper.toDTO(usuario))
+                .orElse(null);
     }
 }

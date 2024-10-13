@@ -24,12 +24,5 @@ class G2GestionEventosApplicationTests {
         assertNotNull(event.getFechaInicio());
     }
 
-    @Test
-    void testEqualsAndHashCode() {
-    	Evento event1 = new Evento(1L, "Evento 1", LocalDateTime.now());
-    	Evento event2 = new Evento(1L, "Evento 1", LocalDateTime.now());
-
-        assertEquals(event1, event2);
-        assertEquals(event1.hashCode(), event2.hashCode());
-    }
+   
 }

@@ -10,5 +10,6 @@ public class G2GestionEventosApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(G2GestionEventosApplication.class, args);
+		
 	}
 }

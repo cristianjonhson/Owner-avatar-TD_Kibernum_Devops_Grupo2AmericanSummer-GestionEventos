@@ -48,8 +48,5 @@ public class HomeController {
         return "redirect:/home"; // Redirige después de enviar
     }
 
-    @GetMapping("/login")
-    public String getLoginPage() {
-        return "login";
-    }
+   
 }
