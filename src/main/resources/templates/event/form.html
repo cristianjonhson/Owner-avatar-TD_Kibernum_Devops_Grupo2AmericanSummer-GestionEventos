@@ -162,51 +162,66 @@
         </div>
     </footer>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- Script para manejar la confirmación y éxito -->
     <script>
         document.getElementById('eventoForm').addEventListener('submit', function (event) {
-            event.preventDefault(); // Prevenir el envío normal del formulario
+            event.preventDefault(); // Prevenir el envío automático del formulario
 
+            const form = this;
+            const titulo = document.getElementById('titulo').value;
+
+            // Confirmación antes de enviar
             Swal.fire({
                 title: '¿Estás seguro?',
-                text: "¡Esta acción no se puede deshacer!",
+                text: `Estás a punto de guardar el evento: ${titulo}`,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Sí, crear!'
+                confirmButtonText: 'Sí, guardar',
+                cancelButtonText: 'Cancelar'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // Enviar el formulario
-                    this.submit();
+                    // Enviar el formulario al servidor
+                    fetch(form.action, {
+                        method: form.method,
+                        body: new FormData(form),
+                    })
+                        .then(response => {
+                            if (response.ok) {
+                                // Notificación de éxito
+                                Swal.fire({
+                                    title: '¡Guardado!',
+                                    text: 'El evento ha sido guardada exitosamente.',
+                                    icon: 'success'
+                                }).then(() => {
+                                    window.location.href = '/evento/lista'; // Redirigir después de la confirmación
+                                });
+                            } else {
+                                // Notificación de error
+                                Swal.fire({
+                                    title: 'Error',
+                                    text: 'Ocurrió un error al guardar el evento.',
+                                    icon: 'error'
+                                });
+                            }
+                        })
+                        .catch(error => {
+                            // Notificación de error si la solicitud falla
+                            Swal.fire({
+                                title: 'Error',
+                                text: 'Ocurrió un error en la solicitud.',
+                                icon: 'error'
+                            });
+                        });
                 }
             });
         });
-
-        // Mostrar mensaje de éxito o error basado en atributos del modelo
-        document.addEventListener('DOMContentLoaded', function () {
-            const message = /*[[${message}]]*/ '';
-            if (message) {
-                Swal.fire({
-                    icon: 'success',
-                    title: '¡Éxito!',
-                    text: message
-                });
-            }
-
-            const errorMessage = /*[[${errorMessage}]]*/ '';
-            if (errorMessage) {
-                Swal.fire({
-                    icon: 'error',
-                    title: '¡Error!',
-                    text: errorMessage
-                });
-            }
-        });
     </script>
-    <!-- Bootstrap JS y dependencias -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 
 </html>
