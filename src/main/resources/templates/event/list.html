@@ -1,77 +1,120 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lista de Eventos</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" th:href="@{/styles/style.css}">
+    <!-- FontAwesome CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
-<body>
-    <div class="container">
-        <h2 class="my-4">Lista de Eventos</h2>
 
-        <!-- Tabla de eventos -->
-        <table class="table table-striped table-responsive table-sm">
-            <thead class="thead-dark">
-                <tr>
-                    <th>ID</th>
-                    <th>Título</th>
-                    <th>Descripción</th>
-                    <th>Fecha Inicio</th>
-                    <th>Fecha Fin</th>
-                    <th>Ubicación</th>
-                    <th>Ciudad</th>
-                    <th>Organizador</th>
-                    <th>Categoría</th>
-                    <th>Valor</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="evento : ${eventoList}">
-                    <td th:text="${evento.id}"></td>
-                    <td th:text="${evento.titulo}"></td>
-                    <td th:text="${evento.descripcion}"></td>
-                    <td th:text="${#temporals.format(evento.fechaInicio,'dd/MM/YYYY HH:mm')}"></td>
-                    <td th:text="${#temporals.format(evento.fechaFin,'dd/MM/YYYY HH:mm')}"></td>
-                    <td th:text="${evento.ubicacion}"></td>
-                    <td th:text="${evento.ciudad}"></td>
-                    <td th:text="${evento.organizador}"></td>
-                    <td th:text="${evento.categoria}"></td>
-                    <td th:text="${#numbers.formatCurrency(evento.valor)}"></td>
-                    <!-- <td th:text="${#strings.replace(#numbers.formatCurrency(evento.valor), '.00', '')}"></td> -->
-                    <!-- <td th:text="${#numbers.formatInteger(evento.valor, 1)}"></td> -->
-                    <td>
-                        <div class="d-flex">
-                            <a th:href="@{/evento/editar/{id}(id=${evento.id})}" class="btn btn-warning me-2 d-flex align-items-center">
-                                <i class="fas fa-edit me-1"></i> Editar
-                            </a>
-                            <button type="button" class="btn btn-danger d-flex align-items-center"
-                                th:onclick="'confirmDelete(' + ${evento.id} + ')'">
-                                <i class="fas fa-trash-alt me-1"></i> Eliminar
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        
-        <a href="/evento/nuevo" class="btn btn-success">
-            <i class="fas fa-plus"></i> Agregar Nuevo Evento
+<body>
+    <!-- Menú de Navegación -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#" th:href="@{/}">
+            <i class="fas fa-calendar"></i> Gestión de Eventos
         </a>
-        <a href="/home" class="btn btn-primary">
-            <i class="fas fa-home"></i> Volver al inicio
-        </a>
-    </div>
-    
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#" th:href="@{/}"><i class="fas fa-home"></i> Inicio <span
+                            class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Servicios
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="#" th:href="@{/evento/lista}">Gestionar Eventos</a>
+                        <a class="dropdown-item" href="#" th:href="@{/calendario}">Ver Calendario</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" th:href="@{/about}"><i class="fas fa-info-circle"></i> Acerca de</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" th:href="@{/contact}"><i class="fas fa-envelope"></i> Contacto</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <main>
+        <div class="container mt-8">
+            <h2>Lista de Eventos</h2>
+
+            <!-- Tabla de eventos -->
+            <table class="table table-striped table-responsive">
+                <thead>
+                    <tr>
+                        <th>Título</th>
+                        <th>Descripción</th>
+                        <th>FechaInicio</th>
+                        <th>Fecha Fin</th>
+                        <th>Ubicación</th>
+                        <th>Organizador</th>
+                        <th>Categoría</th>
+                        <th>Valor</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="evento : ${eventoList}">
+                        <td th:text="${evento.titulo}"></td>
+                        <td th:text="${evento.descripcion}"></td>
+                        <td th:text="${#temporals.format(evento.fechaInicio,'dd/MM/YYYY HH:mm')}"></td>
+                        <td th:text="${#temporals.format(evento.fechaFin,'dd/MM/YYYY HH:mm')}"></td>
+                        <td th:text="${evento.ubicacion}"></td>
+                        <td th:text="${evento.organizador}"></td>
+                        <td th:text="${evento.categoria}"></td>
+                        <td th:text="${#numbers.formatCurrency(evento.valor)}"></td>
+                        <!-- <td th:text="${#strings.replace(#numbers.formatCurrency(evento.valor), '.00', '')}"></td> -->
+                        <!-- <td th:text="${#numbers.formatInteger(evento.valor, 1)}"></td> -->
+                        <td>
+                            <div class="d-flex mt-3">
+                                <a th:href="@{/evento/editar/{id}(id=${evento.id})}"
+                                    class="btn btn-warning me-2 d-flex">
+                                    <i class="fas fa-edit me-1"></i> Editar
+                                </a>
+                                <button type="button" class="btn btn-danger d-flex"
+                                    th:onclick="'confirmDelete(' + ${evento.id} + ')'">
+                                    <i class="fas fa-trash-alt me-1"></i> Eliminar
+                                </button>
+                            </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <a href="/evento/nuevo" class="btn btn-success">
+                <i class="fas fa-plus"></i> Agregar Nuevo Evento
+            </a>
+            <a href="/home" class="btn btn-primary">
+                <i class="fas fa-home"></i> Volver al inicio
+            </a>
+        </div>
+    </main>
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 American Summer. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
     <!-- Bootstrap JS y dependencias -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
-    
+
     <!-- Script para manejar la confirmación y éxito -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -153,4 +196,5 @@
         });
     </script>
 </body>
+
 </html>
