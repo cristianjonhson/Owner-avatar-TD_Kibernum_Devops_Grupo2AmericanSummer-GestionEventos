@@ -78,7 +78,7 @@
                 <!-- Campo oculto para la fecha de registro -->
                 <input type="hidden" id="fechaRegistro" th:field="*{fechaRegistro}" />
 
-                <button type="submit" class="btn btn-success">Registrar</button>
+                <button type="submit" id="saveUser" class="btn btn-success">Registrar</button>
             </form>
             <a href="/" class="btn btn-secondary mt-3">Cancelar</a>
         </div>
@@ -112,11 +112,41 @@
                     cancelButtonColor: '#d33',
                     confirmButtonText: 'Sí, registrar!'
                 }).then((result) => {
-                    if (result.isConfirmed) {
-                        // Enviar el formulario
-                        form.submit();
-                    }
-                });
+                if (result.isConfirmed) {
+                    // Enviar el formulario al servidor
+                    fetch(form.action, {
+                        method: form.method,
+                        body: new FormData(form),
+                    })
+                        .then(response => {
+                            if (response.ok) {
+                                // Notificación de éxito
+                                Swal.fire({
+                                    title: '¡Guardado!',
+                                    text: 'El usuario ha sido guardada exitosamente.',
+                                    icon: 'success'
+                                }).then(() => {
+                                    window.location.href = '/usuarios/lista'; // Redirigir después de la confirmación
+                                });
+                            } else {
+                                // Notificación de error
+                                Swal.fire({
+                                    title: 'Error',
+                                    text: 'Ocurrió un error al guardar el usuario.',
+                                    icon: 'error'
+                                });
+                            }
+                        })
+                        .catch(error => {
+                            // Notificación de error si la solicitud falla
+                            Swal.fire({
+                                title: 'Error',
+                                text: 'Ocurrió un error en la solicitud.',
+                                icon: 'error'
+                            });
+                        });
+                }
+            });
             });
         });
     </script>
