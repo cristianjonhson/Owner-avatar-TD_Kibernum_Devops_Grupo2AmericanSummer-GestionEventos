@@ -76,9 +76,9 @@
                         <td th:text="${evento.ubicacion}"></td>
                         <td th:text="${evento.organizador}"></td>
                         <td th:text="${evento.categoria}"></td>
-                        <td th:text="${#numbers.formatCurrency(evento.valor)}"></td>
+                        <!-- <td th:text="${#numbers.formatCurrency(evento.valor)}"></td> -->
                         <!-- <td th:text="${#strings.replace(#numbers.formatCurrency(evento.valor), '.00', '')}"></td> -->
-                        <!-- <td th:text="${#numbers.formatInteger(evento.valor, 1)}"></td> -->
+                        <td th:text="'$' + ${#numbers.formatInteger(evento.valor, 1)}">$ </td>
                         <td>
                             <div class="d-flex mt-3">
                                 <a th:href="@{/evento/editar/{id}(id=${evento.id})}"
