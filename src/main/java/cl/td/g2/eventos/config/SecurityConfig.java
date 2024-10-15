@@ -2,8 +2,6 @@ package cl.td.g2.eventos.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
@@ -18,6 +16,7 @@ public class SecurityConfig {
         http
             .authorizeRequests()
                 .requestMatchers("/login", "/").permitAll()
+                .requestMatchers("/calendario", "/inscripcion").hasRole("usuario") // Cambiar a "usuario" si lo renombraste a "ROLE_usuario"
                 .anyRequest().authenticated()
             .and()
             .formLogin()
@@ -28,8 +27,6 @@ public class SecurityConfig {
                 .permitAll();
         return http.build();
     }
-
-    
 
     @Bean
     public static NoOpPasswordEncoder passwordEncoder() {
