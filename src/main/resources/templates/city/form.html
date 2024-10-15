@@ -52,7 +52,7 @@
         <div class="container mt-8">
             <h2>Crear Ciudad</h2>
             <!-- Formulario -->
-            <form id="ciudadForm" action="/ciudades/guardar" method="post">
+            <form id="ciudadForm" th:action="@{/ciudades/guardar}" th:object="${ciudadDTO}" method="post">
                 <div class="mb-3">
                     <label for="nombre" class="form-label">Nombre de la Ciudad</label>
                     <input type="text" class="form-control" id="nombre" name="nombre" required>
