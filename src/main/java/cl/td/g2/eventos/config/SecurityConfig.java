@@ -15,12 +15,13 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .authorizeRequests()
-                .requestMatchers("/login", "/").permitAll()
+                .requestMatchers("/login").permitAll()  // Rutas públicas
                 .requestMatchers("/calendario", "/inscripcion").hasRole("usuario") // Cambiar a "usuario" si lo renombraste a "ROLE_usuario"
-                .anyRequest().authenticated()
+                .anyRequest().authenticated()  // Todas las demás rutas requieren autenticación
             .and()
             .formLogin()
-                .loginPage("/login")
+                .loginPage("/login")  // Página de login personalizada
+                .defaultSuccessUrl("/")  // Página después de iniciar sesión exitosamente
                 .permitAll()
             .and()
             .logout()
