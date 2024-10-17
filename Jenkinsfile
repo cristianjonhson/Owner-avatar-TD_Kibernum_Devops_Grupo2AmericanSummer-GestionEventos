@@ -7,7 +7,7 @@ pipeline {
         }
         stage('Build Java Project') {
             steps {
-                sh 'mvn clean install'  // Construye tu proyecto Java con Maven
+                sh 'mvn -f pom.xml clean install'  // Construye tu proyecto Java con Maven
             }
         }
         stage('Install Python and Selenium') {
