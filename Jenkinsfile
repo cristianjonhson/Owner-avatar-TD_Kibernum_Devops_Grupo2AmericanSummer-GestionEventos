@@ -1,3 +1,8 @@
+def COLOR_MAP = [
+  'SUCCESS': 'good',
+  'FAILURE':'danger',
+]
+
 pipeline {
     agent any
     
@@ -22,7 +27,7 @@ pipeline {
         SPRING_JPA_DATABASE_PLATFORM = 'org.hibernate.dialect.PostgreSQLDialect'
         SERVER_PORT = '8082'
         SPRING_APPLICATION_NAME = 'G2-GestionEventos'
-        PROJECT_PATH = 'C:\\Users\\mmf27\\Documents\\Repositorios\\TD_Kibernum_Devops_Grupo2AmericanSummer-GestionEventos'
+        //PROJECT_PATH = 'C:\\Users\\mmf27\\Documents\\Repositorios\\TD_Kibernum_Devops_Grupo2AmericanSummer-GestionEventos'
     }
     
     stages {
@@ -145,7 +150,7 @@ pipeline {
                             rol VARCHAR(50) DEFAULT 'usuario'
                         );
 
-                        -- Tabla de categorías de eventos
+                        -- Tabla de categoris de eventos
                         CREATE TABLE categorias (
                             id SERIAL PRIMARY KEY,
                             nombre VARCHAR(100) NOT NULL UNIQUE
@@ -189,12 +194,12 @@ pipeline {
                         ('Juan', 'Perez', 'juan.perez@example.com', 'password123', 'ROLE_usuario'),
                         ('Maria', 'Garcia', 'maria.garcia@example.com', 'password123', 'usuario');
 
-                        -- Insertar datos de prueba en la tabla de categorías
+                        -- Insertar datos de prueba en la tabla de categorias
                         INSERT INTO categorias (nombre)
                         VALUES 
                         ('Verano Familiar'),
-                        ('Programación'),
-                        ('Música'),
+                        ('Programacion'),
+                        ('Musica'),
                         ('Deportes');
 
                         -- Insertar datos de prueba en la tabla de ciudades
@@ -208,8 +213,8 @@ pipeline {
                         -- Insertar datos de prueba en la tabla de eventos
                         INSERT INTO eventos (titulo, descripcion, fecha_inicio, fecha_fin, ubicacion, organizador_id, categoria_id, ciudad_id, valor, imagen_html)
                         VALUES 
-                        ('Festival de Verano Familiar', 'Un día lleno de actividades familiares en la playa.', '2024-08-01 10:00:00', '2024-08-01 18:00:00', 'Playa Central', 1, 1, 1, 0.00, '<img src="festival_verano.jpg" />'),
-                        ('Conferencia de Programación', 'Una conferencia sobre las últimas tendencias en programación.', '2024-08-05 09:00:00', '2024-08-05 17:00:00', 'Sala de Conferencias', 1, 2, 3, 0.00, '<img src="conf_programacion.jpg" />');
+                        ('Festival de Verano Familiar', 'Un dia lleno de actividades familiares en la playa.', '2024-08-01 10:00:00', '2024-08-01 18:00:00', 'Playa Central', 1, 1, 1, 0.00, '<img src="festival_verano.jpg" />'),
+                        ('Conferencia de Programacion', 'Una conferencia sobre las ultimas tendencias en programacion.', '2024-08-05 09:00:00', '2024-08-05 17:00:00', 'Sala de Conferencias', 1, 2, 3, 0.00, '<img src="conf_programacion.jpg" />');
 
                         -- Insertar datos de prueba en la tabla de inscripciones
                         INSERT INTO inscripciones (usuario_id, evento_id)
@@ -224,15 +229,15 @@ pipeline {
                         SELECT * FROM eventos;
                         SELECT * FROM inscripciones;
 
-                        EOF
+EOF
                     '''
                 }
             }
         }
     }
 
-    /*post {
-        always {
+    post {
+        /*always {
             echo 'Cleaning up Docker containers and workspace...'
             script {
                 sh '''
@@ -243,6 +248,12 @@ pipeline {
             }
             // Limpieza de archivos temporales
             cleanWs()
+        }*/
+        always{
+            echo 'Slack Notification desde Jenkinsfile'
+            slackSend channel: 'jenkins',
+            color: COLOR_MAP[currentBuild.currentResult],
+            message: "*${currentBuild.currentResult}: Job ${env.JOB_NAME} (jenkinsfile) - build ${env.BUILD_NUMBER}\n More Info at: ${env.BUILD_URL}"
         }
-    }*/
+    }
 }
