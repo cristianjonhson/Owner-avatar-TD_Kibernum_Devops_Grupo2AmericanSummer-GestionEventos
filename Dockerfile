@@ -1,4 +1,4 @@
-# Usar una imagen base de OpenJDK con JRE 17
+# Usar una imagen base de OpenJDK con JRE 21
 FROM openjdk:21-jdk-slim
 
 # Establecer el directorio de trabajo dentro del contenedor
