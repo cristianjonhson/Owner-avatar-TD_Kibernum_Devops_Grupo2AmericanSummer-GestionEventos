@@ -28,6 +28,10 @@ pipeline {
         SERVER_PORT = '8082'
         SPRING_APPLICATION_NAME = 'G2-GestionEventos'
         //PROJECT_PATH = 'C:\\Users\\mmf27\\Documents\\Repositorios\\TD_Kibernum_Devops_Grupo2AmericanSummer-GestionEventos'
+
+        // Define el SonarQube Server a utilizar
+        SONARQUBE_URL = 'http://localhost:9000'
+        scannerHome = tool 'SonarQubeScanner'
     }
     
     stages {
@@ -42,6 +46,17 @@ pipeline {
             steps {
                 // Construir el proyecto con Maven
                 sh 'mvn -f pom.xml clean install'
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('sonarqube-10.6.0.92116') { // Asegúrate de que el nombre coincide con la configuración de Jenkins
+                    sh '${scannerHome}/bin/sonar-scanner \
+                    -Dsonar.projectKey=Grupo2AmericanSummer-GestionEventos \
+                    -Dsonar.host.url=${SONARQUBE_URL} \
+                    -Dsonar.java.binaries=target/classes'
+                }
             }
         }
 
