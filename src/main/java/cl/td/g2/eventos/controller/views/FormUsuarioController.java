@@ -29,18 +29,18 @@ public class FormUsuarioController {
 
     // Guardar un nuevo usuario
     @PostMapping("/usuarios/guardar")
-    public String guardarUsuario(@ModelAttribute @Validated UsuarioDTO usuarioDTO, 
-                                 BindingResult result, 
-                                 RedirectAttributes redirectAttributes) {
+    public String guardarUsuario(@ModelAttribute @Validated UsuarioDTO usuarioDTO,
+            BindingResult result,
+            RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
-            return "user/form"; // Si hay errores, volver al formulario
+            return "user/form";
         }
         try {
-            // Establecer la fecha de registro aquí por seguridad
             usuarioDTO.setFechaRegistro(LocalDateTime.now());
+            // No se codifica la contraseña
             usuarioService.createUsuario(usuarioDTO);
             redirectAttributes.addFlashAttribute("success", "Usuario registrado exitosamente.");
-            return "redirect:/usuarios/lista"; // Redirigir al listado de usuarios
+            return "redirect:/usuarios/lista";
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", "Hubo un error al registrar el usuario.");
             return "user/form";
@@ -60,14 +60,15 @@ public class FormUsuarioController {
 
     // Actualizar un usuario existente
     @PostMapping("/usuarios/editar/{id}")
-    public String actualizarUsuario(@PathVariable("id") Long id, 
-                                    @Valid @ModelAttribute("usuarioDTO") UsuarioDTO usuarioDTO, 
-                                    BindingResult result, 
-                                    RedirectAttributes redirectAttributes) {
+    public String actualizarUsuario(@PathVariable Long id,
+            @Valid @ModelAttribute("usuario") UsuarioDTO usuarioDTO,
+            BindingResult result,
+            RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
             return "user/edit"; // Volver a mostrar el formulario si hay errores
         }
         try {
+            // No se codifica la contraseña en la actualización
             usuarioService.updateUsuario(id, usuarioDTO);
             redirectAttributes.addFlashAttribute("success", "Usuario actualizado exitosamente.");
             return "redirect:/usuarios/lista"; // Redirigir al listado después de la actualización
@@ -79,7 +80,7 @@ public class FormUsuarioController {
 
     // Eliminar un usuario
     @GetMapping("/usuarios/eliminar/{id}")
-    public String eliminarUsuario(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
+    public String eliminarUsuario(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         try {
             usuarioService.deleteUsuario(id);
             redirectAttributes.addFlashAttribute("deleted", "Usuario eliminado exitosamente.");

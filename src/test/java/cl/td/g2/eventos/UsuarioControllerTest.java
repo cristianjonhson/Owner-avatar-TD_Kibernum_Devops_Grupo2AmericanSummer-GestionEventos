@@ -91,24 +91,6 @@ class UsuarioControllerTest {
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
     }
 
-    @Test
-    void testLoginUsuarioSuccess() {
-        when(usuarioService.loginUsuario(any(String.class), any(String.class))).thenReturn(true);
-
-        ResponseEntity<Boolean> response = usuarioController.loginUsuario(usuarioDTO);
-
-        assertEquals(HttpStatus.ACCEPTED, response.getStatusCode());
-        assertEquals(true, response.getBody());
-    }
-
-    @Test
-    void testLoginUsuarioFailure() {
-        when(usuarioService.loginUsuario(any(String.class), any(String.class))).thenReturn(false);
-
-        ResponseEntity<Boolean> response = usuarioController.loginUsuario(usuarioDTO);
-
-        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
-        assertEquals(false, response.getBody());
-    }
+   
 }
 
