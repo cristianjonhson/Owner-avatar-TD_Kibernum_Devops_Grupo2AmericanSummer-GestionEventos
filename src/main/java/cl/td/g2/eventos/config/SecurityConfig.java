@@ -4,10 +4,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
@@ -15,34 +13,24 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    	/*http.authorizeHttpRequests(request -> request
-        		.requestMatchers("/", "/styles/*", "/home-tmp", "/home", "/login").permitAll()
-        		.requestMatchers("/categorias/**", "/ciudades/**", "/eventos/**", "/inscripciones/**", "/usuarios/**").permitAll()
-        		.anyRequest().authenticated())*/
-        	/*.formLogin(form -> form
-        		.loginPage("/login")
-        		.defaultSuccessUrl("/eventos", true)
-        		.permitAll())
-        	.logout(LogoutConfigurer::permitAll)*///;
-    	http.csrf(AbstractHttpConfigurer::disable);
-        http.authorizeHttpRequests(request -> request.anyRequest().permitAll());
+        http
+            .authorizeRequests()
+                .requestMatchers("/login").permitAll()  // Rutas públicas
+                .requestMatchers("/calendario", "/inscripcion").hasRole("usuario") // Cambiar a "usuario" si lo renombraste a "ROLE_usuario"
+                .anyRequest().authenticated()  // Todas las demás rutas requieren autenticación
+            .and()
+            .formLogin()
+                .loginPage("/login")  // Página de login personalizada
+                .defaultSuccessUrl("/")  // Página después de iniciar sesión exitosamente
+                .permitAll()
+            .and()
+            .logout()
+                .permitAll();
         return http.build();
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+    public static NoOpPasswordEncoder passwordEncoder() {
+        return (NoOpPasswordEncoder) NoOpPasswordEncoder.getInstance();
     }
-
-    /*@Bean
-    public UserDetailsService userDetailsService() {
-        return new CustomUserDetailsService();
-    }
-
-    @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
-        AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
-        authenticationManagerBuilder.userDetailsService(userDetailsService()).passwordEncoder(passwordEncoder());
-        return authenticationManagerBuilder.build();
-    }*/
 }

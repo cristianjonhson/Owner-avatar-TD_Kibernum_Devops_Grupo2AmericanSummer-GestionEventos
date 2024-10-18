@@ -41,16 +41,16 @@ public class EventTest {
         assertEquals(LocalDateTime.of(2024, 8, 1, 12, 0), event.getFechaFin());
 
         // Verificar que la categoría del evento sea la esperada
-        assertEquals("Conferencia", event.getCategoria());
+        assertEquals("Conferencia", event.getCategoria().getNombre());
 
         // Verificar que la ubicación del evento sea la esperada
         assertEquals("Auditorio Principal", event.getUbicacion());
 
         // Verificar que la ciudad del evento sea la esperada
-        assertEquals("Madrid", event.getCiudad());
+        assertEquals("Madrid", event.getCiudad().getNombre());
 
         // Verificar que el valor del evento sea el esperado
-        assertEquals(50.0, event.getValor());
+        assertEquals(BigDecimal.valueOf(50.0), event.getValor());
 
         // Verificar que las fechas y horas de inicio y fin no sean iguales
         assertNotEquals(event.getFechaInicio(), event.getFechaFin());

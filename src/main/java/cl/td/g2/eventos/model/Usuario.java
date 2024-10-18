@@ -4,10 +4,14 @@ package cl.td.g2.eventos.model;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @Table(name = "usuarios")
-public class Usuario {
+public class Usuario  implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -99,4 +103,39 @@ public class Usuario {
 		this.rol = rol;
 	}
 
+	@Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        // Retorna los roles o permisos del usuario
+        return null; // Implementa según tus necesidades
+    }
+
+    @Override
+    public String getPassword() {
+        return getPassword();
+    }
+
+    @Override
+    public String getUsername() {
+        return nombre; // Puedes retornar el nombre o el campo que utilices para la autenticación
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true; // Implementa según tus necesidades
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true; // Implementa según tus necesidades
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true; // Implementa según tus necesidades
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true; // Implementa según tus necesidades
+    }
 }

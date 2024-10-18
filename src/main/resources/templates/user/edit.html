@@ -52,7 +52,7 @@
         <div class="container mt-8">
             <h2>Editar Usuario</h2>
             <!-- Formulario para editar el usuario -->
-            <form id="editarForm" th:action="@{/usuario/editar/{id}(id=${usuario.id})}" th:object="${usuario}"
+            <form id="editarForm" th:action="@{/usuarios/editar/{id}(id=${usuario.id})}" th:object="${usuario}"
                 method="post">
                 <div class="form-group mb-3">
                     <label for="nombre">Nombre</label>
@@ -99,6 +99,7 @@
     </footer>
 
     <script>
+         document.addEventListener('DOMContentLoaded', function () {
         // Confirmación para actualizar el usuario
         window.confirmEdit = function (event) {
             event.preventDefault();
@@ -125,7 +126,7 @@
                                 icon: 'success',
                                 confirmButtonText: 'Ok'
                             }).then(() => {
-                                window.location.href = "/usuario/lista";
+                                window.location.href = "/usuarios/lista";
                             });
                         } else {
                             Swal.fire({
@@ -160,7 +161,7 @@
                 cancelButtonText: 'Cancelar'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    fetch(`/usuario/eliminar/${id}`, { method: 'GET' })
+                    fetch(`/usuarios/eliminar/${id}`, { method: 'GET' })
                         .then(response => {
                             if (response.ok) {
                                 Swal.fire({
@@ -169,7 +170,7 @@
                                     icon: 'success',
                                     confirmButtonText: 'Ok'
                                 }).then(() => {
-                                    window.location.href = "/usuario/lista";
+                                    window.location.href = "/usuarios/lista";
                                 });
                             } else {
                                 Swal.fire({
@@ -190,7 +191,8 @@
                         });
                 }
             });
-        };
+        }
+        });
     </script>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

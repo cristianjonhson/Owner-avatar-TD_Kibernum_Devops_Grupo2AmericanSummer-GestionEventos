@@ -16,7 +16,7 @@
     <description>Aplicación para gestionar eventos en un calendario</description>
     <url>http://maven.apache.org</url>
     <properties>
-        <java.version>17</java.version>
+        <java.version>21</java.version>
     </properties>
 
     <dependencies>
@@ -131,6 +131,11 @@
 
     <build>
         <plugins>
+
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
             <!-- Plugin para generar archivos JAR ejecutables -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
