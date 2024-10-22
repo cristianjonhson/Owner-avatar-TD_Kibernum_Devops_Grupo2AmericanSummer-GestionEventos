@@ -240,7 +240,21 @@ psql -U postgres -d gestion_eventos
 
 ## Configuración de SonarQube
 
-El proyecto incluye una configuración para analizar el código fuente con SonarQube.
+Puedes analizar el código fuente con SonarQube usando el siguiente comando de Docker para ejecutar SonarQube:
+
+```bash
+docker run -d --name sonarqube -p 9000:9000 sonarqube:lts
+```
+
+Para ejecutar Jenkins de forma local:
+
+```bash
+docker run -d --name jenkins1 -p 7080:8080 -p 50000:50000 jenkins/jenkins:lts
+```
+
+## Análisis de Código con SonarQube
+
+Si deseas realizar el análisis del código con SonarQube, asegúrate de que SonarQube esté en ejecución en el puerto configurado (por defecto, 9000). Puedes cambiar la URL de SonarQube y el token de autenticación en el Dockerfile.
 
 ### Dockerfile
 
@@ -302,24 +316,5 @@ La aplicación estará disponible en la siguiente URL, asumiendo que la estás e
 ```bash
 http://localhost:8082
 ```
-
-## Análisis de Código con SonarQube
-
-Si deseas realizar el análisis del código con SonarQube, asegúrate de que SonarQube esté en ejecución en el puerto configurado (por defecto, 9000). Puedes cambiar la URL de SonarQube y el token de autenticación en el Dockerfile.
-
-
-Puedes analizar el código fuente con SonarQube usando el siguiente comando de Docker para ejecutar SonarQube:
-
-```bash
-docker run -d --name sonarqube -p 9000:9000 sonarqube:lts
-```
-
-Para ejecutar Jenkins de forma local:
-
-```bash
-docker run -d --name jenkins1 -p 7080:8080 -p 50000:50000 jenkins/jenkins:lts
-```
-
-
 
 ---
