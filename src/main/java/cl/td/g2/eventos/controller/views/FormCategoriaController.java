@@ -2,6 +2,8 @@ package cl.td.g2.eventos.controller.views;
 
 import cl.td.g2.eventos.dto.CategoriaDTO;
 import cl.td.g2.eventos.service.CategoriaService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +17,8 @@ import java.util.List;
 
 @Controller
 public class FormCategoriaController {
+
+    private static final Logger logger = LoggerFactory.getLogger(FormCategoriaController.class);
 
     @Autowired
     private CategoriaService categoriaService;
@@ -32,14 +36,16 @@ public class FormCategoriaController {
                                    BindingResult result,
                                    RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
+            logger.warn("Error en la validación al guardar la categoría: {}", categoriaDTO);
             return "category/form"; // Volver al formulario si hay errores
         }
         try {
             categoriaService.createCategoria(categoriaDTO);
-             // Agregar un atributo para señalar que fue exitoso
+            logger.info("Categoría guardada exitosamente: {}", categoriaDTO.toString());
             redirectAttributes.addFlashAttribute("success", true);
             return "redirect:/categoria/lista"; // Redirigir con éxito
         } catch (Exception e) {
+            logger.error("Error al guardar la categoría: {}", e.getMessage());
             redirectAttributes.addFlashAttribute("errorMessage", "Hubo un error al guardar la categoría.");
             return "category/form"; // Si hay error, se queda en el formulario
         }
@@ -50,6 +56,7 @@ public class FormCategoriaController {
     public String mostrarFormularioEdicion(@PathVariable("id") Long id, Model model) {
         CategoriaDTO categoria = categoriaService.getCategoriaById(id);
         if (categoria == null) {
+            logger.warn("Categoría no encontrada para el ID: {}", id);
             return "redirect:/error"; // O cualquier página de error que prefieras
         }
         model.addAttribute("categoria", categoria);
@@ -64,12 +71,20 @@ public class FormCategoriaController {
                                   RedirectAttributes redirectAttributes) {
 
         if (result.hasErrors()) {
+            logger.warn("Error en la validación al editar la categoría con ID {}: {}", id, categoriaDTO);
             return "category/edit"; // Volver a mostrar el formulario si hay errores
         }
 
-        categoriaService.updateCategoria(id, categoriaDTO);
-        redirectAttributes.addAttribute("success", true);
-        return "redirect:/categoria/editar/{id}";
+        try {
+            categoriaService.updateCategoria(id, categoriaDTO);
+            logger.info("Categoría actualizada exitosamente: ID = {}, DTO = {}", id, categoriaDTO);
+            redirectAttributes.addFlashAttribute("success", true);
+            return "redirect:/categoria/lista"; // Redirigir al listado de categorías
+        } catch (Exception e) {
+            logger.error("Error al actualizar la categoría con ID {}: {}", id, e.getMessage());
+            redirectAttributes.addFlashAttribute("errorMessage", "Hubo un error al actualizar la categoría.");
+            return "category/edit"; // Si hay error, se queda en el formulario
+        }
     }
 
     // Eliminar una categoría y redirigir al listado
@@ -77,10 +92,11 @@ public class FormCategoriaController {
     public String eliminarCategoria(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         try {
             categoriaService.deleteCategoria(id);
-            // Agregar el atributo de éxito y redirigir a la lista de categorías
+            logger.info("Categoría eliminada exitosamente: ID = {}", id);
             redirectAttributes.addFlashAttribute("deleted", true);
             return "redirect:/categoria/lista"; // Redirigir al método que lista las categorías
         } catch (Exception e) {
+            logger.error("Error al eliminar la categoría con ID {}: {}", id, e.getMessage());
             redirectAttributes.addFlashAttribute("errorMessage", "Hubo un error al eliminar la categoría.");
             return "redirect:/categoria/lista?error=true"; // Redirige con un mensaje de error si falla
         }
