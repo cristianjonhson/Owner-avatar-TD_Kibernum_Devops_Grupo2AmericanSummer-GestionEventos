@@ -305,5 +305,7 @@ http://localhost:8082
 ## Análisis de Código con SonarQube
 
 Si deseas realizar el análisis del código con SonarQube, asegúrate de que SonarQube esté en ejecución en el puerto configurado (por defecto, 9000). Puedes cambiar la URL de SonarQube y el token de autenticación en el Dockerfile.
+ docker run -d --name sonarqube -p 9000:9000 sonarqube:lts
+
 
 ---
