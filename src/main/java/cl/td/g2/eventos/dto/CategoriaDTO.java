@@ -21,4 +21,11 @@ public class CategoriaDTO {
 		this.nombre = nombre;
 	}
 
+	@Override
+    public String toString() {
+        return "CategoriaDTO{" +
+                "id=" + id +
+                ", nombre='" + nombre + '\'' +
+                '}';
+    }
 }
