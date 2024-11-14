@@ -38,6 +38,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Clonar el repositorio
+                 echo "\u001B[36mClonando repositorio...\u001B[0m"
                 git url: 'https://github.com/cristianjonhson/TD_Kibernum_Devops_Grupo2AmericanSummer-GestionEventos.git', branch: 'feature/PT2-45-JM'
             }
         }
@@ -45,6 +46,7 @@ pipeline {
         stage('Build Project with Maven') {
             steps {
                 // Construir el proyecto con Maven
+                echo "\u001B[32mConstruyendo proyecro con Maven...\u001B[0m"
                 sh 'mvn -f pom.xml clean install'
             }
         }
@@ -64,11 +66,13 @@ pipeline {
         stage('Run Unit Tests') {
             steps {
                 // Ejecutar pruebas con Maven
+                echo "\u001B[34mCorriendo pruebas unitarias...\u001B[0m"
                 sh 'mvn -f pom.xml test'
             }
             post {
                 always {
                     // Publicar resultados de pruebas
+                  |echo "\u001B[34mPublicar resultados de pruebas...\u001B[0m"
                     junit '**/target/surefire-reports/*.xml'
                 }
             }
@@ -76,9 +80,10 @@ pipeline {
 
         stage('Create Docker Network') {
             steps {
+              echo "\u001B[33mCreando la red de Docker (si no existe)...\u001B[0m"
                 script {
                     sh '''
-                    docker network create ${NETWORK_NAME} || echo "Network already exists"
+                    docker network create ${NETWORK_NAME} || echo "Red ya existente"
                     '''
                 }
             }
@@ -86,15 +91,16 @@ pipeline {
 
         stage('Start PostgreSQL Container') {
             steps {
+                echo "\u001B[35mStarting PostgreSQL Container...\u001B[0m"
                 script {
                     // Verificar si el contenedor pg_container ya existe y eliminarlo si es necesario
                     sh '''
                     if [ "$(docker ps -a -q -f name=${PG_CONTAINER})" ]; then
-                        echo "El contenedor '${PG_CONTAINER}' ya existe. Eliminándolo..."
+                        echo -e "\033[0;31mEl contenedor '${PG_CONTAINER}' ya existe. Eliminándolo...\033[0m"
                         docker rm -f ${PG_CONTAINER}
                     fi
         
-                    echo "Creando el contenedor '${PG_CONTAINER}'..."
+                    echo -e "\033[0;32mCreando el contenedor '${PG_CONTAINER}'...\033[0m"
                     docker run -d --name ${PG_CONTAINER} --network ${NETWORK_NAME} \
                         -e POSTGRES_USER=${POSTGRES_USER} \
                         -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} \
@@ -107,6 +113,7 @@ pipeline {
 
         stage('Build Application Docker Image') {
             steps {
+              echo "\u001B[36mConstruyendo la imagen docker del aplicativo...\u001B[0m"
                 script {
                     sh '''
                     docker build -t ${APP_IMAGE} .
@@ -117,15 +124,16 @@ pipeline {
 
         stage('Start Application Container') {
             steps {
+               echo "\u001B[33mStarting Application Container...\u001B[0m"
                 script {
                     // Verificar si el contenedor gestion_eventos_app ya existe y eliminarlo si es necesario
                     sh '''
                     if [ "$(docker ps -a -q -f name=${APP_CONTAINER})" ]; then
-                        echo "El contenedor '${APP_CONTAINER}' ya existe. Eliminándolo..."
+                        echo -e "\033[0;31mEl contenedor '${APP_CONTAINER}' ya existe. Eliminándolo...\033[0m"
                         docker rm -f ${APP_CONTAINER}
                     fi
         
-                    echo "Creando el contenedor '${APP_CONTAINER}'..."
+                    echo -e "\033[0;32mCreando el contenedor '${APP_CONTAINER}'...\033[0m"
                     docker run -d --name ${APP_CONTAINER} --network ${NETWORK_NAME} \
                         -e "SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}" \
                         -e "SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}" \
@@ -142,6 +150,7 @@ pipeline {
       
         stage('Inspect Docker Network') {
             steps {
+              echo "\u001B[32mInspecting Docker Network...\u001B[0m"
                 script {
                     sh '''
                     docker network inspect ${NETWORK_NAME}
@@ -162,6 +171,7 @@ pipeline {
         
         stage('Ejecutar comandos SQL') {
             steps {
+              echo "\u001B[34mExecuting SQL Commands in PostgreSQL Container...\u001B[0m"
                 script {
                     // Ejecutar comandos SQL dentro del contenedor pg_container
                     sh '''
