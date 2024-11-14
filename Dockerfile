@@ -12,8 +12,8 @@ COPY src ./src
 RUN mvn clean verify sonar:sonar -Dsonar.host.url=http://host.docker.internal:9000 -Dsonar.login=sqp_fc460ee7637d88918967791ee63e485c3852a112 -e -X
 
 
-# Fase final: Usar una imagen base de OpenJDK con JRE 21
-FROM openjdk:21-jdk-slim
+# Fase final: Usar una imagen base de OpenJDK con JRE 17
+FROM openjdk:17-jdk-slim
 
 # Establecer el directorio de trabajo dentro del contenedor
 WORKDIR /app
