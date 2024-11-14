@@ -72,8 +72,8 @@ pipeline {
             post {
                 always {
                     // Publicar resultados de pruebas
-                  |echo "\u001B[34mPublicar resultados de pruebas...\u001B[0m"
-                    junit '**/target/surefire-reports/*.xml'
+                  echo "\u001B[34mPublicar resultados de pruebas...\u001B[0m"
+                  junit '**/target/surefire-reports/*.xml'
                 }
             }
         }
