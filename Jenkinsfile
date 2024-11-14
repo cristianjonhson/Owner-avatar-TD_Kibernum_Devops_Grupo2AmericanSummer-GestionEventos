@@ -55,7 +55,7 @@ pipeline {
                 withSonarQubeEnv('SonarQubeScanner') { // Usar la configuración del servidor SonarQube sin versión específica
                     sh "${scannerHome}/bin/sonar-scanner \
                     -Dsonar.projectKey=Grupo2AmericanSummer-GestionEventos \
-                    -Dsonar.host.url=${SONARQUBE_URL} \
+                    -Dsonar.host.url="http://172.19.0.3:9000" \
                     -Dsonar.java.binaries=target/classes"
                 }
               }
