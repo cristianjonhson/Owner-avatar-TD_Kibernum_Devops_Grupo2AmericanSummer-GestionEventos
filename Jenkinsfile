@@ -52,7 +52,7 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 // Sin especificar versión, solo usar el scanner configurado en Jenkins
-                withSonarQubeEnv('sonarqube') { // Usar la configuración del servidor SonarQube sin versión específica
+                withSonarQubeEnv('SonarQubeScanner') { // Usar la configuración del servidor SonarQube sin versión específica
                     sh "${scannerHome}/bin/sonar-scanner \
                     -Dsonar.projectKey=Grupo2AmericanSummer-GestionEventos \
                     -Dsonar.host.url=${SONARQUBE_URL} \
