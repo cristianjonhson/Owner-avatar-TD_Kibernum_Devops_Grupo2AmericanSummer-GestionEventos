@@ -118,7 +118,14 @@ pipeline {
         stage('Start Application Container') {
             steps {
                 script {
+                    // Verificar si el contenedor gestion_eventos_app ya existe y eliminarlo si es necesario
                     sh '''
+                    if [ "$(docker ps -a -q -f name=${APP_CONTAINER})" ]; then
+                        echo "El contenedor '${APP_CONTAINER}' ya existe. Eliminándolo..."
+                        docker rm -f ${APP_CONTAINER}
+                    fi
+        
+                    echo "Creando el contenedor '${APP_CONTAINER}'..."
                     docker run -d --name ${APP_CONTAINER} --network ${NETWORK_NAME} \
                         -e "SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}" \
                         -e "SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}" \
@@ -132,7 +139,7 @@ pipeline {
                 }
             }
         }
-
+      
         stage('Inspect Docker Network') {
             steps {
                 script {
