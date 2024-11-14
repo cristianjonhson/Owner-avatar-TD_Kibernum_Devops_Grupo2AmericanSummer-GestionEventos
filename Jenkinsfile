@@ -51,7 +51,7 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('sonarqube-10.6.0.92116') { // Asegúrate de que el nombre coincide con la configuración de Jenkins
+                withSonarQubeEnv('sonarqube-6.2') { // Asegúrate de que el nombre coincide con la configuración de Jenkins
                     sh '${scannerHome}/bin/sonar-scanner \
                     -Dsonar.projectKey=Grupo2AmericanSummer-GestionEventos \
                     -Dsonar.host.url=${SONARQUBE_URL} \
