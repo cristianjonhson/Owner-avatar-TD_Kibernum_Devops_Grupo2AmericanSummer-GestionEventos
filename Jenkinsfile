@@ -9,7 +9,7 @@ pipeline {
     environment {
         // Maven and JDK tools defined in Jenkins
         MAVEN_HOME = tool 'apache-maven-3.9.8'
-        JAVA_HOME = tool 'jdk 21'
+        JAVA_HOME = tool 'jdk 17'
         PATH = "${MAVEN_HOME}/bin:${JAVA_HOME}/bin:${env.PATH}"
 
         // Docker environment
@@ -264,11 +264,11 @@ EOF
             // Limpieza de archivos temporales
             cleanWs()
         }*/
-        always{
-            /*echo 'Slack Notification desde Jenkinsfile'
+        /* always{
+           echo 'Slack Notification desde Jenkinsfile'
             slackSend channel: 'jenkins',
             color: COLOR_MAP[currentBuild.currentResult],
-            message: "*${currentBuild.currentResult}: Job ${env.JOB_NAME} (jenkinsfile) - build ${env.BUILD_NUMBER}\n More Info at: ${env.BUILD_URL}"*/
-        }
+            message: "*${currentBuild.currentResult}: Job ${env.JOB_NAME} (jenkinsfile) - build ${env.BUILD_NUMBER}\n More Info at: ${env.BUILD_URL}"
+        }*/
     }
 }
