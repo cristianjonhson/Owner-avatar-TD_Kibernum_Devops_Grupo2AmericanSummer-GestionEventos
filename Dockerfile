@@ -9,7 +9,7 @@ COPY pom.xml ./
 COPY src ./src
 
 # Ejecutar el análisis de SonarQube y construir la aplicación
-RUN mvn clean verify sonar:sonar -Dsonar.host.url=http://host.docker.internal:9000 -Dsonar.login=sqp_fc460ee7637d88918967791ee63e485c3852a112 -e -X
+RUN mvn clean verify sonar:sonar -Dsonar.host.url=http://host.docker.internal:9000 -Dsonar.login=sqa_8c8563636fe0ef37ecfa4005ae616cf125bd376c -e -X
 
 
 # Fase final: Usar una imagen base de OpenJDK con JRE 17
