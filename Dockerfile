@@ -8,16 +8,10 @@ WORKDIR /app
 COPY pom.xml ./
 COPY src ./src
 
-# Definir la rama a analizar (puedes pasar el nombre de la rama como argumento de construcción o usar un valor fijo)
-ARG BRANCH_NAME=feature/PT2-45-JM
-
 # Ejecutar el análisis de SonarQube y construir la aplicación
-RUN mvn clean verify sonar:sonar \
-    -Dsonar.host.url=http://host.docker.internal:9000 \
-    -Dsonar.login=sqa_8c8563636fe0ef37ecfa4005ae616cf125bd376c \
-    -Dsonar.branch.name=${BRANCH_NAME} \
-    -e -X
-    
+RUN mvn clean verify sonar:sonar -Dsonar.host.url=http://host.docker.internal:9000 -Dsonar.login=sqa_8c8563636fe0ef37ecfa4005ae616cf125bd376c -e -X
+
+
 # Fase final: Usar una imagen base de OpenJDK con JRE 17
 FROM openjdk:17-jdk-slim
 
