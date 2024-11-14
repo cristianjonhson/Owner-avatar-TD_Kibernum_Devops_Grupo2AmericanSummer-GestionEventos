@@ -265,10 +265,10 @@ EOF
             cleanWs()
         }*/
         always{
-            echo 'Slack Notification desde Jenkinsfile'
+            /*echo 'Slack Notification desde Jenkinsfile'
             slackSend channel: 'jenkins',
             color: COLOR_MAP[currentBuild.currentResult],
-            message: "*${currentBuild.currentResult}: Job ${env.JOB_NAME} (jenkinsfile) - build ${env.BUILD_NUMBER}\n More Info at: ${env.BUILD_URL}"
+            message: "*${currentBuild.currentResult}: Job ${env.JOB_NAME} (jenkinsfile) - build ${env.BUILD_NUMBER}\n More Info at: ${env.BUILD_URL}"*/
         }
     }
 }
