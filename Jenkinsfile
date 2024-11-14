@@ -51,14 +51,15 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('sonarqube-latest') { // Asegúrate de que el nombre coincide con la configuración de Jenkins
-                    sh '${scannerHome}/bin/sonar-scanner \
+                // Sin especificar versión, solo usar el scanner configurado en Jenkins
+                withSonarQubeEnv('sonarqube') { // Usar la configuración del servidor SonarQube sin versión específica
+                    sh "${scannerHome}/bin/sonar-scanner \
                     -Dsonar.projectKey=Grupo2AmericanSummer-GestionEventos \
                     -Dsonar.host.url=${SONARQUBE_URL} \
-                    -Dsonar.java.binaries=target/classes'
+                    -Dsonar.java.binaries=target/classes"
                 }
-            }
-        }
+              }
+           }
 
         stage('Run Unit Tests') {
             steps {
