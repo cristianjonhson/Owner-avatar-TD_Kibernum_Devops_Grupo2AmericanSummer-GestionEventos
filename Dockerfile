@@ -25,7 +25,7 @@ RUN mkdir -p /var/log/app_logs
 COPY --from=builder /app/target/calendarapp-0.0.1-SNAPSHOT.jar /app/calendarapp.jar
 
 # Exponer el puerto en el que la aplicación estará escuchando
-EXPOSE 8080
+EXPOSE 8081
 
 # Comando para ejecutar la aplicación Spring Boot
 ENTRYPOINT ["java", "-jar", "/app/calendarapp.jar"]
