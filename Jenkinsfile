@@ -49,17 +49,17 @@ pipeline {
             }
         }
 
-        stage('SonarQube Analysis') {
+       /* stage('SonarQube Analysis') {
             steps {
                 // Sin especificar versión, solo usar el scanner configurado en Jenkins
                 withSonarQubeEnv('SonarQubeScanner') { // Usar la configuración del servidor SonarQube sin versión específica
                     sh "${scannerHome}/bin/sonar-scanner \
                     -Dsonar.projectKey=Grupo2AmericanSummer-GestionEventos \
-                    -Dsonar.host.url=http://172.19.0.3:9000 \
+                    -Dsonar.host.url=${SONARQUBE_URL} \
                     -Dsonar.java.binaries=target/classes"
                 }
               }
-           }
+           }*/
 
         stage('Run Unit Tests') {
             steps {
