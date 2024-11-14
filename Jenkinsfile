@@ -87,7 +87,14 @@ pipeline {
         stage('Start PostgreSQL Container') {
             steps {
                 script {
+                    // Verificar si el contenedor pg_container ya existe y eliminarlo si es necesario
                     sh '''
+                    if [ "$(docker ps -a -q -f name=${PG_CONTAINER})" ]; then
+                        echo "El contenedor '${PG_CONTAINER}' ya existe. Eliminándolo..."
+                        docker rm -f ${PG_CONTAINER}
+                    fi
+        
+                    echo "Creando el contenedor '${PG_CONTAINER}'..."
                     docker run -d --name ${PG_CONTAINER} --network ${NETWORK_NAME} \
                         -e POSTGRES_USER=${POSTGRES_USER} \
                         -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} \
