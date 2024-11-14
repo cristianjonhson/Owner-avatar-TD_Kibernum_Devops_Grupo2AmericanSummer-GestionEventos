@@ -251,8 +251,8 @@ EOF
         }
     }
 
-    post {
-        /*always {
+   /* post {
+        always {
             echo 'Cleaning up Docker containers and workspace...'
             script {
                 sh '''
@@ -269,6 +269,6 @@ EOF
             slackSend channel: 'jenkins',
             color: COLOR_MAP[currentBuild.currentResult],
             message: "*${currentBuild.currentResult}: Job ${env.JOB_NAME} (jenkinsfile) - build ${env.BUILD_NUMBER}\n More Info at: ${env.BUILD_URL}"
-        }*/
-    }
+        }
+    }*/
 }
