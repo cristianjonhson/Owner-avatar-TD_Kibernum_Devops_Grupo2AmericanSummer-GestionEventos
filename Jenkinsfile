@@ -38,7 +38,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Clonar el repositorio
-                git url: 'https://github.com/cristianjonhson/TD_Kibernum_Devops_Grupo2AmericanSummer-GestionEventos.git', branch: 'feature/PT2-45-JM'
+                git url: 'https://github.com/cristianjonhson/TD_Kibernum_Devops_Grupo2AmericanSummer-GestionEventos.git', branch: 'feature/PT2-44-MM'
             }
         }
 
